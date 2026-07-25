@@ -158,8 +158,58 @@ document.addEventListener('DOMContentLoaded', () => {
     const playAgainBtn = document.getElementById('playAgainBtn');
 
     const HIGH_SCORE_KEY = 'shinan_snake_high_score';
+    const NAME_KEY = 'shinan_snake_player_name';
+    const LEADERBOARD_KEY = 'shinan_snake_leaderboard';
+    const MAX_LEADERBOARD_ENTRIES = 10;
+
     let highScore = parseInt(localStorage.getItem(HIGH_SCORE_KEY) || '0', 10);
     highScoreEl.textContent = highScore;
+
+    const playerNameInput = document.getElementById('playerName');
+    const leaderboardList = document.getElementById('leaderboardList');
+    const leaderboardEmpty = document.getElementById('leaderboardEmpty');
+
+    // restore last-used name, if any
+    const savedName = localStorage.getItem(NAME_KEY);
+    if (savedName) playerNameInput.value = savedName;
+
+    function getLeaderboard() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || '[]');
+        return Array.isArray(raw) ? raw : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function renderLeaderboard() {
+      const entries = getLeaderboard();
+      leaderboardList.innerHTML = '';
+      leaderboardEmpty.hidden = entries.length > 0;
+
+      entries.forEach((entry, i) => {
+        const li = document.createElement('li');
+        li.className = 'leaderboard-item' + (i === 0 ? ' is-top' : '');
+        li.innerHTML = `
+          <span class="leaderboard-rank">${i + 1}</span>
+          <span class="leaderboard-name"></span>
+          <span class="leaderboard-score">${entry.score}</span>
+        `;
+        li.querySelector('.leaderboard-name').textContent = entry.name;
+        leaderboardList.appendChild(li);
+      });
+    }
+
+    function saveScore(name, finalScore) {
+      const entries = getLeaderboard();
+      entries.push({ name, score: finalScore });
+      entries.sort((a, b) => b.score - a.score);
+      const trimmed = entries.slice(0, MAX_LEADERBOARD_ENTRIES);
+      localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(trimmed));
+      renderLeaderboard();
+    }
+
+    renderLeaderboard();
 
     let snake, direction, nextDirection, food, score, baseSpeed, speed, running, paused, loopTimer;
 
@@ -319,6 +369,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       finalScoreEl.textContent = `Your score: ${score}`;
       gameOverOverlay.hidden = false;
+
+      // save this run to the local leaderboard, tied to the entered name
+      const name = (playerNameInput.value || '').trim().slice(0, 18) || 'Player';
+      playerNameInput.value = name;
+      localStorage.setItem(NAME_KEY, name);
+      if (score > 0) saveScore(name, score);
     }
 
     function togglePause() {
