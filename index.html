@@ -236,10 +236,10 @@
         <h3>Shinan Unneenkutty P</h3>
         <ul>
           <li><i class="fa-solid fa-location-dot"></i> Kerala, India</li>
-          <li><i class="fa-solid fa-envelope"></i> <a href="mailto:shinan@example.com">sk21online@gmail.com</a></li>
-          <li><i class="fa-brands fa-linkedin"></i> <a href="#" target="_blank" rel="noopener">https://www.linkedin.com/in/shinan-unneenkutty-p-026790335</a></li>
-    
-          <li><i class="fa-brands fa-instagram"></i> <a href="#" target="_blank" rel="noopener">@shinan_parokkot</a></li>
+          <li><i class="fa-solid fa-envelope"></i> <a href="mailto:shinan@example.com">shinan@example.com</a></li>
+          <li><i class="fa-brands fa-linkedin"></i> <a href="#" target="_blank" rel="noopener">linkedin.com/in/shinan-unneenkutty</a></li>
+          <li><i class="fa-brands fa-github"></i> <a href="#" target="_blank" rel="noopener">github.com/shinan-unneenkutty</a></li>
+          <li><i class="fa-brands fa-instagram"></i> <a href="#" target="_blank" rel="noopener">@shinan.unneenkutty</a></li>
         </ul>
       </div>
 
@@ -286,6 +286,11 @@
       <p class="break-message">Thanks for visiting my portfolio. Before you leave, enjoy a quick game!</p>
 
       <div class="glass-card game-panel">
+        <div class="player-name-row">
+          <label for="playerName">Playing as</label>
+          <input type="text" id="playerName" maxlength="18" placeholder="Enter your name" autocomplete="off">
+        </div>
+
         <div class="game-header">
           <div class="game-score">Score: <span id="score">0</span></div>
           <div class="game-score">High Score: <span id="highScore">0</span></div>
@@ -321,6 +326,12 @@
             <button class="touch-btn touch-right" data-dir="right" aria-label="Move right"><i class="fa-solid fa-chevron-right"></i></button>
           </div>
         </div>
+      </div>
+
+      <div class="glass-card leaderboard-panel">
+        <h3><i class="fa-solid fa-trophy"></i> Top Scorers</h3>
+        <ol class="leaderboard-list" id="leaderboardList"></ol>
+        <p class="leaderboard-empty" id="leaderboardEmpty">No scores yet — be the first to play!</p>
       </div>
     </div>
   </div>
