@@ -1,5 +1,5 @@
 /* =========================================================
-   SHINAN UNNEENKUTTY P — PORTFOLIO SCRIPT
+   SHINAN UNNEENKUTTY P  PORTFOLIO SCRIPT
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
