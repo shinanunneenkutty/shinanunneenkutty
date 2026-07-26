@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shinan Unneenkutty — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --dur: 0.6s;
+  }
+
+  /* ---------- LIGHT THEME ---------- */
+  html[data-theme="light"]{
+    --bg: #EFF4FB;
+    --bg-2: #E4ECF9;
+    --ink: #0B1E39;
+    --ink-soft: #46587A;
+    --ink-faint: #8496B5;
+    --blue: #1450C4;
+    --blue-2: #2F6FE0;
+    --glass: rgba(255,255,255,0.55);
+    --glass-border: rgba(255,255,255,0.75);
+    --glass-strong: rgba(255,255,255,0.75);
+    --ledger-line: rgba(20,80,196,0.07);
+    --orb-1: rgba(47,111,224,0.35);
+    --orb-2: rgba(20,80,196,0.18);
+    --shadow: 0 8px 32px rgba(20,45,90,0.10);
+  }
+
+  /* ---------- DARK THEME (navy/black + blue) ---------- */
+  html[data-theme="dark"]{
+    --bg: #060B18;
+    --bg-2: #0A1428;
+    --ink: #EAF1FF;
+    --ink-soft: #A8BADC;
+    --ink-faint: #5E7099;
+    --blue: #5B93FF;
+    --blue-2: #3E6FE0;
+    --glass: rgba(18,30,54,0.55);
+    --glass-border: rgba(120,155,220,0.18);
+    --glass-strong: rgba(15,26,48,0.72);
+    --ledger-line: rgba(91,147,255,0.07);
+    --orb-1: rgba(60,100,220,0.35);
+    --orb-2: rgba(30,60,140,0.30);
+    --shadow: 0 8px 32px rgba(0,0,0,0.45);
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+    transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  ::selection{ background: var(--blue); color:#fff; }
+
+  h1,h2,h3{ font-family:'Fraunces', serif; letter-spacing:-0.01em; }
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color: var(--blue);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:22px; height:1px;
+    background: var(--blue);
+    display:inline-block;
+  }
+
+  /* ---------- BACKGROUND ATMOSPHERE ---------- */
+  .atmosphere{
+    position:fixed; inset:0;
+    z-index:-2;
+    overflow:hidden;
+    background:
+      linear-gradient(var(--ledger-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--ledger-line) 1px, transparent 1px),
+      var(--bg);
+    background-size: 42px 42px, 42px 42px, cover;
+    transition: background-color var(--dur) var(--ease);
+  }
+  .orb{
+    position:absolute;
+    border-radius:50%;
+    filter: blur(70px);
+    animation: float 22s ease-in-out infinite;
+  }
+  .orb1{ width:420px; height:420px; background:var(--orb-1); top:-120px; left:-100px; animation-duration:26s; }
+  .orb2{ width:360px; height:360px; background:var(--orb-2); bottom:5%; right:-80px; animation-duration:20s; animation-delay:-6s; }
+  .orb3{ width:280px; height:280px; background:var(--orb-1); top:45%; left:60%; animation-duration:24s; animation-delay:-12s; opacity:0.6; }
+
+  @keyframes float{
+    0%,100%{ transform: translate(0,0) scale(1); }
+    33%{ transform: translate(30px,-40px) scale(1.08); }
+    66%{ transform: translate(-25px,25px) scale(0.95); }
+  }
+
+  /* ---------- GLASS PANEL ---------- */
+  .glass{
+    background: var(--glass);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
+                box-shadow 0.4s var(--ease), transform 0.4s var(--ease);
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0;
+    z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 6vw;
+    background: var(--glass-strong);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border-bottom:1px solid var(--glass-border);
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+  .logo{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.08rem;
+    letter-spacing:-0.01em;
+  }
+  .nav-links{
+    display:flex; gap:2.2rem;
+    list-style:none;
+  }
+  .nav-links a{
+    color: var(--ink-soft);
+    text-decoration:none;
+    font-size:0.92rem;
+    font-weight:500;
+    position:relative;
+    transition: color 0.3s var(--ease);
+  }
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:-6px;
+    width:0; height:1px; background:var(--blue);
+    transition: width 0.35s var(--ease);
+  }
+  .nav-links a:hover{ color:var(--ink); }
+  .nav-links a:hover::after{ width:100%; }
+
+  .theme-toggle{
+    width:52px; height:28px;
+    border-radius:20px;
+    background: var(--glass);
+    border:1px solid var(--glass-border);
+    position:relative;
+    cursor:pointer;
+    transition: background var(--dur) var(--ease);
+  }
+  .theme-toggle .knob{
+    position:absolute; top:2px; left:3px;
+    width:22px; height:22px;
+    border-radius:50%;
+    background: var(--blue);
+    transition: transform 0.4s var(--ease), background var(--dur) var(--ease);
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px;
+  }
+  html[data-theme="dark"] .theme-toggle .knob{ transform: translateX(24px); }
+
+  .nav-toggle-btn{ display:none; background:none; border:none; color:var(--ink); font-size:1.4rem; cursor:pointer; }
+
+  /* ---------- SECTIONS ---------- */
+  section{
+    padding: 130px 8vw 90px;
+    max-width:1180px;
+    margin:0 auto;
+    position:relative;
+  }
+
+  .reveal{
+    opacity:0; transform: translateY(28px);
+    transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- HERO ---------- */
+  #home{
+    min-height:100vh;
+    display:flex; flex-direction:column; justify-content:center;
+    padding-top:110px;
+  }
+  .hero-name{
+    font-size: clamp(2.6rem, 7vw, 5.2rem);
+    font-weight:600;
+    line-height:1.02;
+    margin-bottom:20px;
+  }
+  .hero-name .last{ color:var(--blue); font-style:italic; font-weight:500; }
+  .hero-role{
+    font-family:'JetBrains Mono', monospace;
+    font-size:1rem;
+    color: var(--ink-soft);
+    letter-spacing:0.06em;
+    margin-bottom:30px;
+  }
+  .hero-sub{
+    max-width:520px;
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    line-height:1.7;
+    margin-bottom:44px;
+  }
+  .hero-cta{ display:flex; gap:16px; flex-wrap:wrap; }
+
+  .btn{
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:0.92rem;
+    padding:14px 30px;
+    border-radius:100px;
+    cursor:pointer;
+    border:none;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), background var(--dur) var(--ease);
+  }
+  .btn-primary{
+    background: var(--blue);
+    color:#fff;
+    box-shadow:0 10px 26px rgba(20,80,196,0.28);
+  }
+  .btn-primary:hover{ transform: translateY(-3px); box-shadow:0 16px 34px rgba(20,80,196,0.36); }
+  .btn-ghost{
+    background: var(--glass);
+    color:var(--ink);
+    border:1px solid var(--glass-border);
+    backdrop-filter: blur(14px);
+  }
+  .btn-ghost:hover{ transform: translateY(-3px); }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{
+    display:grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap:50px;
+    align-items:start;
+  }
+  .about-text p{
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    line-height:1.85;
+  }
+  .stat-cards{
+    display:flex; flex-direction:column; gap:16px;
+  }
+  .stat-card{
+    padding:22px 24px;
+  }
+  .stat-card .label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin-bottom:8px;
+  }
+  .stat-card .value{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    font-weight:600;
+  }
+
+  /* ---------- EDUCATION TIMELINE ---------- */
+  .timeline{
+    position:relative;
+    padding-left:36px;
+  }
+  .timeline::before{
+    content:'';
+    position:absolute; left:6px; top:6px; bottom:6px;
+    width:1px;
+    background: linear-gradient(var(--blue), transparent 95%);
+    opacity:0.35;
+  }
+  .t-item{
+    position:relative;
+    padding:26px 28px;
+    margin-bottom:22px;
+  }
+  .t-item::before{
+    content:'';
+    position:absolute; left:-36px; top:30px;
+    width:12px; height:12px;
+    border-radius:50%;
+    background: var(--blue);
+    box-shadow:0 0 0 4px var(--bg), 0 0 0 5px var(--glass-border);
+  }
+  .t-date{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.78rem;
+    color:var(--blue);
+    letter-spacing:0.04em;
+    margin-bottom:8px;
+    display:block;
+  }
+  .t-title{
+    font-family:'Fraunces', serif;
+    font-size:1.2rem;
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  .t-item ul{
+    margin-top:10px;
+    padding-left:18px;
+    color:var(--ink-soft);
+    font-size:0.94rem;
+    line-height:1.7;
+  }
+  .t-item p.desc{ color:var(--ink-soft); font-size:0.94rem; line-height:1.7; }
+  .t-tag{
+    display:inline-block;
+    margin-top:12px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--blue);
+    background: rgba(47,111,224,0.1);
+    padding:5px 12px;
+    border-radius:100px;
+  }
+
+  /* ---------- FAVORITES ---------- */
+  .fav-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:26px;
+  }
+  .fav-card{
+    padding:0;
+    overflow:hidden;
+    text-align:center;
+    cursor:default;
+  }
+  .fav-card:hover{ transform: translateY(-8px); }
+  .fav-photo{
+    width:100%;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(160deg, var(--orb-1), var(--orb-2));
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+    position:relative;
+  }
+  .fav-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .fav-fallback{
+    font-family:'Fraunces', serif;
+    font-size:2.6rem;
+    font-weight:600;
+    color:#fff;
+  }
+  .fav-body{ padding:22px 18px 26px; }
+  .fav-sport{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--blue);
+    margin-bottom:8px;
+  }
+  .fav-name{ font-family:'Fraunces', serif; font-size:1.2rem; font-weight:600; }
+
+  /* ---------- FRIENDS ---------- */
+  .friends-panel{
+    padding:60px 8vw;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .friends-panel .eyebrow{ justify-content:center; }
+  .friends-handle{
+    font-family:'Fraunces', serif;
+    font-size:clamp(1.8rem, 4.5vw, 3rem);
+    font-weight:600;
+    font-style:italic;
+    color:var(--blue);
+    text-decoration:none;
+    display:inline-block;
+    margin:14px 0 22px;
+    transition: transform 0.35s var(--ease), letter-spacing 0.35s var(--ease);
+  }
+  .friends-handle:hover{ transform:scale(1.03); letter-spacing:0.01em; }
+  .friends-desc{
+    max-width:520px;
+    margin:0 auto 30px;
+    color:var(--ink-soft);
+    line-height:1.8;
+    font-size:1.02rem;
+  }
+
+  /* ---------- CONTACT ---------- */
+  .contact-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:20px;
+  }
+  .contact-card{
+    padding:28px 24px;
+    display:flex; flex-direction:column; gap:10px;
+    text-decoration:none;
+    color:var(--ink);
+  }
+  .contact-card:hover{ transform: translateY(-6px); }
+  .contact-card .label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+  .contact-card .value{ font-size:1.02rem; font-weight:500; word-break:break-word; }
+
+  footer{
+    text-align:center;
+    padding:40px 8vw 120px;
+    color:var(--ink-faint);
+    font-size:0.85rem;
+    font-family:'JetBrains Mono', monospace;
+  }
+
+  /* ---------- MUSIC PLAYER ---------- */
+  .player{
+    position:fixed;
+    bottom:26px; right:26px;
+    z-index:200;
+    display:flex; align-items:center; gap:14px;
+    padding:12px 20px 12px 12px;
+    border-radius:100px;
+    max-width:270px;
+  }
+  .play-btn{
+    width:46px; height:46px;
+    border-radius:50%;
+    background: var(--blue);
+    border:none;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+    color:#fff;
+    transition: transform 0.3s var(--ease), background var(--dur) var(--ease);
+  }
+  .play-btn:hover{ transform: scale(1.08); }
+  .play-btn svg{ width:16px; height:16px; }
+  .player-info{ overflow:hidden; }
+  .player-title{ font-size:0.86rem; font-weight:600; white-space:nowrap; }
+  .player-sub{ font-size:0.72rem; color:var(--ink-faint); }
+  .eq{ display:flex; align-items:flex-end; gap:2px; height:14px; margin-left:4px; }
+  .eq span{
+    width:2.5px; background:var(--blue); border-radius:2px;
+    animation: eq 0.9s ease-in-out infinite; animation-play-state:paused;
+    height:4px;
+  }
+  .player.playing .eq span{ animation-play-state:running; }
+  .eq span:nth-child(1){ animation-delay:0s; }
+  .eq span:nth-child(2){ animation-delay:0.2s; }
+  .eq span:nth-child(3){ animation-delay:0.4s; }
+  @keyframes eq{
+    0%,100%{ height:4px; }
+    50%{ height:14px; }
+  }
+
+  @media (max-width: 860px){
+    .about-grid, .fav-grid, .contact-grid{ grid-template-columns:1fr; }
+    .nav-links{
+      position:fixed; top:64px; right:-100%;
+      flex-direction:column;
+      background: var(--glass-strong);
+      backdrop-filter: blur(20px);
+      width:220px; padding:24px;
+      border-radius:16px 0 0 16px;
+      border:1px solid var(--glass-border);
+      transition: right 0.4s var(--ease);
+      gap:1.2rem;
+    }
+    .nav-links.open{ right:0; }
+    .nav-toggle-btn{ display:block; }
+    section{ padding:110px 6vw 70px; }
+    .player{ max-width:210px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="atmosphere">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<nav>
+  <div class="logo">Shinan Unneenkutty</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#favorites">Favorites</a></li>
+    <li><a href="#friends">Friends</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <div class="theme-toggle" id="themeToggle" role="button" aria-label="Toggle dark mode">
+      <div class="knob">☾</div>
+    </div>
+    <button class="nav-toggle-btn" id="navToggleBtn" aria-label="Open menu">☰</button>
+  </div>
+</nav>
+
+<section id="home">
+  <div class="eyebrow">Portfolio — Kerala, India</div>
+  <h1 class="hero-name">Shinan<br>Unneenkutty <span class="last">P</span></h1>
+  <div class="hero-role">CA ASPIRANT — FOUNDATION TRACK 2027</div>
+  <p class="hero-sub">Building a career in finance and technology, one ledger — and one line of code — at a time.</p>
+  <div class="hero-cta">
+    <a href="#about" class="btn btn-primary">About Me →</a>
+    <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+  </div>
+</section>
+
+<section id="about">
+  <div class="eyebrow">About</div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>Hi, I'm Shinan Unneenkutty P, an aspiring Chartered Accountant from Kerala, India. I'm currently preparing for the CA Foundation while building my knowledge in accounting, finance, and business. Beyond academics, I enjoy exploring technology, creating web projects, watching movies, and following cricket. I believe in continuous learning, discipline, and turning ideas into meaningful work. This portfolio showcases my journey, projects, skills, and the goals I'm working towards as I build a career in the world of finance and technology.</p>
+    </div>
+    <div class="stat-cards">
+      <div class="stat-card glass reveal">
+        <div class="label">Based in</div>
+        <div class="value">Kerala, India</div>
+      </div>
+      <div class="stat-card glass reveal">
+        <div class="label">Currently</div>
+        <div class="value">CA Foundation Prep</div>
+      </div>
+      <div class="stat-card glass reveal">
+        <div class="label">Target Attempt</div>
+        <div class="value">January 2027</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="eyebrow">Education</div>
+  <div class="timeline">
+    <div class="t-item glass reveal">
+      <span class="t-date">JUNE 2015 — MARCH 2021</span>
+      <div class="t-title">MES KTM, Vattamannappuram</div>
+      <p class="desc">Foundational schooling.</p>
+    </div>
+    <div class="t-item glass reveal">
+      <span class="t-date">JUNE 2021 — MARCH 2026</span>
+      <div class="t-title">MES KTM, Vattamannappuram</div>
+      <ul>
+        <li>Completed 10th grade — March 2024</li>
+        <li>Completed 12th grade, Commerce stream — March 2026</li>
+      </ul>
+    </div>
+    <div class="t-item glass reveal">
+      <span class="t-date">CURRENT</span>
+      <div class="t-title">Eagles Institute of Management, Valanchery</div>
+      <p class="desc">Preparing for the CA Foundation examination.</p>
+      <span class="t-tag">Targeting Jan 2027 Attempt</span>
+    </div>
+  </div>
+</section>
+
+<section id="favorites">
+  <div class="eyebrow">Favorites</div>
+  <div class="fav-grid">
+    <div class="fav-card glass reveal">
+      <div class="fav-photo">
+        <img src="assets/neymar.jpg" alt="Neymar Jr" onerror="this.style.display='none'; this.parentElement.querySelector('.fav-fallback').style.display='flex';">
+        <div class="fav-fallback" style="display:none; align-items:center; justify-content:center; width:100%; height:100%; position:absolute; inset:0;">NJ</div>
+      </div>
+      <div class="fav-body">
+        <div class="fav-sport">Football</div>
+        <div class="fav-name">Neymar Jr</div>
+      </div>
+    </div>
+    <div class="fav-card glass reveal">
+      <div class="fav-photo">
+        <img src="assets/dhoni.jpg" alt="MS Dhoni" onerror="this.style.display='none'; this.parentElement.querySelector('.fav-fallback').style.display='flex';">
+        <div class="fav-fallback" style="display:none; align-items:center; justify-content:center; width:100%; height:100%; position:absolute; inset:0;">MSD</div>
+      </div>
+      <div class="fav-body">
+        <div class="fav-sport">Cricket</div>
+        <div class="fav-name">MS Dhoni</div>
+      </div>
+    </div>
+    <div class="fav-card glass reveal">
+      <div class="fav-photo">
+        <img src="assets/hamilton.jpg" alt="Lewis Hamilton" onerror="this.style.display='none'; this.parentElement.querySelector('.fav-fallback').style.display='flex';">
+        <div class="fav-fallback" style="display:none; align-items:center; justify-content:center; width:100%; height:100%; position:absolute; inset:0;">LH</div>
+      </div>
+      <div class="fav-body">
+        <div class="fav-sport">Formula 1</div>
+        <div class="fav-name">Lewis Hamilton</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="friends">
+  <div class="friends-panel glass reveal">
+    <div class="eyebrow">Hometown</div>
+    <a class="friends-handle" href="https://www.instagram.com/naatile.storiess" target="_blank" rel="noopener">naatile.storiess</a>
+    <p class="friends-desc">A close-knit hometown crew that has been part of my journey, creating memories that will last a lifetime.</p>
+    <a href="https://www.instagram.com/naatile.storiess" target="_blank" rel="noopener" class="btn btn-primary">Visit the Account →</a>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="eyebrow">Contact</div>
+  <div class="contact-grid">
+    <a href="mailto:sk21online@gmail.com" class="contact-card glass reveal">
+      <div class="label">Email</div>
+      <div class="value">sk21online@gmail.com</div>
+    </a>
+    <a href="tel:+919605513201" class="contact-card glass reveal">
+      <div class="label">Phone</div>
+      <div class="value">+91 96055 13201</div>
+    </a>
+    <a href="https://www.instagram.com/shinan_parokkot" target="_blank" rel="noopener" class="contact-card glass reveal">
+      <div class="label">Instagram</div>
+      <div class="value">@shinan_parokkot</div>
+    </a>
+  </div>
+</section>
+
+<footer>© 2026 Shinan Unneenkutty P — Designed with intent.</footer>
+
+<div class="player glass" id="player">
+  <button class="play-btn" id="playBtn" aria-label="Play favorite song">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+  </button>
+  <div class="player-info">
+    <div class="player-title">Jhol <span class="eq"><span></span><span></span><span></span></span></div>
+    <div class="player-sub">Favorite track</div>
+  </div>
+  <audio id="audio" src="assets/Jhol.mp3" preload="none"></audio>
+</div>
+
+<script>
+  // Theme toggle
+  const themeToggle = document.getElementById('themeToggle');
+  const knob = themeToggle.querySelector('.knob');
+  const html = document.documentElement;
+  function setTheme(t){
+    html.setAttribute('data-theme', t);
+    knob.textContent = t === 'dark' ? '☾' : '☀';
+    localStorage.setItem('portfolio-theme', t);
+  }
+  themeToggle.addEventListener('click', () => {
+    setTheme(html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+  });
+  const saved = localStorage.getItem('portfolio-theme');
+  if(saved){ setTheme(saved); }
+  else if(window.matchMedia('(prefers-color-scheme: dark)').matches){ setTheme('dark'); }
+
+  // Mobile nav
+  const navToggleBtn = document.getElementById('navToggleBtn');
+  const navLinks = document.getElementById('navLinks');
+  navToggleBtn.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Music player
+  const audio = document.getElementById('audio');
+  const playBtn = document.getElementById('playBtn');
+  const playIcon = document.getElementById('playIcon');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const player = document.getElementById('player');
+  playBtn.addEventListener('click', () => {
+    if(audio.paused){
+      audio.play();
+      playIcon.style.display = 'none';
+      pauseIcon.style.display = 'block';
+      player.classList.add('playing');
+    } else {
+      audio.pause();
+      playIcon.style.display = 'block';
+      pauseIcon.style.display = 'none';
+      player.classList.remove('playing');
+    }
+  });
+  audio.addEventListener('ended', () => {
+    playIcon.style.display = 'block';
+    pauseIcon.style.display = 'none';
+    player.classList.remove('playing');
+  });
+</script>
+
+</body>
+</html>
