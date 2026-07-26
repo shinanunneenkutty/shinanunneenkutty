@@ -209,6 +209,36 @@
     margin-bottom:20px;
   }
   .hero-name .last{ color:var(--blue); font-style:italic; font-weight:500; }
+
+  .glow-name{
+    display:inline-block;
+    background: linear-gradient(
+      100deg,
+      var(--ink) 30%,
+      var(--ink) 40%,
+      var(--blue-2) 46%,
+      #fff 50%,
+      var(--blue-2) 54%,
+      var(--ink) 60%,
+      var(--ink) 70%
+    );
+    background-size: 300% 100%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 5s ease-in-out infinite;
+    animation-delay: 1.2s;
+  }
+  @keyframes shine{
+    0%{ background-position: 160% 0; }
+    35%{ background-position: -60% 0; }
+    100%{ background-position: -60% 0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .glow-name{ animation:none; background:none; color:var(--ink); }
+  }
+
   .hero-role{
     font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:1rem;
@@ -392,6 +422,15 @@
     overflow:hidden;
   }
   .friends-panel .eyebrow{ justify-content:center; }
+  .friends-logo{
+    width:84px; height:84px;
+    margin:0 auto 22px;
+    border-radius:50%;
+    overflow:hidden;
+    border:1px solid var(--glass-border);
+    background: var(--glass);
+  }
+  .friends-logo img{ width:100%; height:100%; object-fit:cover; display:block; }
   .friends-handle{
     font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:clamp(1.8rem, 4.5vw, 3rem);
@@ -532,7 +571,7 @@
 
 <section id="home">
   <div class="eyebrow">Portfolio — Kerala, India</div>
-  <h1 class="hero-name">Shinan<br>Unneenkutty <span class="last">P</span></h1>
+  <h1 class="hero-name"><span class="glow-name">Shinan</span><br>Unneenkutty <span class="last">P</span></h1>
   <div class="hero-role">CA ASPIRANT — FOUNDATION TRACK 2027</div>
   <p class="hero-sub">Building a career in finance and technology, one ledger — and one line of code — at a time.</p>
   <div class="hero-cta">
@@ -574,7 +613,7 @@
     </div>
     <div class="t-item glass reveal">
       <span class="t-date">JUNE 2021 — MARCH 2026</span>
-      <div class="t-title">MES KTM, Vattamannappuram</div>
+      <div class="t-title">MES HSS MANNARKKAD</div>
       <ul>
         <li>Completed 10th grade — March 2024</li>
         <li>Completed 12th grade, Commerce stream — March 2026</li>
@@ -627,6 +666,9 @@
 
 <section id="friends">
   <div class="friends-panel glass reveal">
+    <div class="friends-logo">
+      <img src="assets/naatile.jpg" alt="naatile.storiess logo" onerror="this.style.display='none';">
+    </div>
     <div class="eyebrow">Hometown</div>
     <a class="friends-handle" href="https://www.instagram.com/naatile.storiess" target="_blank" rel="noopener">naatile.storiess</a>
     <p class="friends-desc">A close-knit hometown crew that has been part of my journey, creating memories that will last a lifetime.</p>
