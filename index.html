@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shinan Unneenkutty — Portfolio</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
   :root{
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -55,7 +54,7 @@
   body{
     background: var(--bg);
     color: var(--ink);
-    font-family:'Inter', sans-serif;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     overflow-x:hidden;
     transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
     -webkit-font-smoothing:antialiased;
@@ -63,10 +62,10 @@
 
   ::selection{ background: var(--blue); color:#fff; }
 
-  h1,h2,h3{ font-family:'Fraunces', serif; letter-spacing:-0.01em; }
+  h1,h2,h3{ font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; letter-spacing:-0.01em; }
 
   .eyebrow{
-    font-family:'JetBrains Mono', monospace;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:0.72rem;
     letter-spacing:0.18em;
     text-transform:uppercase;
@@ -136,7 +135,7 @@
     transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
   }
   .logo{
-    font-family:'Fraunces', serif;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-weight:600;
     font-size:1.08rem;
     letter-spacing:-0.01em;
@@ -211,7 +210,7 @@
   }
   .hero-name .last{ color:var(--blue); font-style:italic; font-weight:500; }
   .hero-role{
-    font-family:'JetBrains Mono', monospace;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:1rem;
     color: var(--ink-soft);
     letter-spacing:0.06em;
@@ -227,7 +226,7 @@
   .hero-cta{ display:flex; gap:16px; flex-wrap:wrap; }
 
   .btn{
-    font-family:'Inter', sans-serif;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-weight:600;
     font-size:0.92rem;
     padding:14px 30px;
@@ -273,7 +272,7 @@
     padding:22px 24px;
   }
   .stat-card .label{
-    font-family:'JetBrains Mono', monospace;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:0.7rem;
     letter-spacing:0.1em;
     text-transform:uppercase;
@@ -281,7 +280,7 @@
     margin-bottom:8px;
   }
   .stat-card .value{
-    font-family:'Fraunces', serif;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:1.3rem;
     font-weight:600;
   }
@@ -312,7 +311,7 @@
     box-shadow:0 0 0 4px var(--bg), 0 0 0 5px var(--glass-border);
   }
   .t-date{
-    font-family:'JetBrains Mono', monospace;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:0.78rem;
     color:var(--blue);
     letter-spacing:0.04em;
@@ -320,7 +319,7 @@
     display:block;
   }
   .t-title{
-    font-family:'Fraunces', serif;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:1.2rem;
     font-weight:600;
     margin-bottom:8px;
@@ -336,7 +335,7 @@
   .t-tag{
     display:inline-block;
     margin-top:12px;
-    font-family:'JetBrains Mono', monospace;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:0.68rem;
     letter-spacing:0.08em;
     text-transform:uppercase;
@@ -369,21 +368,21 @@
   }
   .fav-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
   .fav-fallback{
-    font-family:'Fraunces', serif;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:2.6rem;
     font-weight:600;
     color:#fff;
   }
   .fav-body{ padding:22px 18px 26px; }
   .fav-sport{
-    font-family:'JetBrains Mono', monospace;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:0.68rem;
     letter-spacing:0.14em;
     text-transform:uppercase;
     color:var(--blue);
     margin-bottom:8px;
   }
-  .fav-name{ font-family:'Fraunces', serif; font-size:1.2rem; font-weight:600; }
+  .fav-name{ font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:1.2rem; font-weight:600; }
 
   /* ---------- FRIENDS ---------- */
   .friends-panel{
@@ -394,7 +393,7 @@
   }
   .friends-panel .eyebrow{ justify-content:center; }
   .friends-handle{
-    font-family:'Fraunces', serif;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:clamp(1.8rem, 4.5vw, 3rem);
     font-weight:600;
     font-style:italic;
@@ -427,7 +426,7 @@
   }
   .contact-card:hover{ transform: translateY(-6px); }
   .contact-card .label{
-    font-family:'JetBrains Mono', monospace;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size:0.68rem;
     letter-spacing:0.12em;
     text-transform:uppercase;
@@ -437,34 +436,35 @@
 
   footer{
     text-align:center;
-    padding:40px 8vw 120px;
+    padding:40px 8vw 90px;
     color:var(--ink-faint);
     font-size:0.85rem;
-    font-family:'JetBrains Mono', monospace;
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
   /* ---------- MUSIC PLAYER ---------- */
   .player{
     position:fixed;
-    bottom:26px; right:26px;
+    bottom:0; left:0; right:0;
     z-index:200;
-    display:flex; align-items:center; gap:14px;
-    padding:12px 20px 12px 12px;
-    border-radius:100px;
-    max-width:270px;
+    display:flex; align-items:center; justify-content:center; gap:14px;
+    padding:10px 20px;
+    background: var(--bg);
+    border-top:1px solid var(--glass-border);
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
   }
   .play-btn{
-    width:46px; height:46px;
+    width:34px; height:34px;
     border-radius:50%;
-    background: var(--blue);
-    border:none;
+    background:none;
+    border:1px solid var(--ink-faint);
     display:flex; align-items:center; justify-content:center;
     cursor:pointer;
     flex-shrink:0;
-    color:#fff;
-    transition: transform 0.3s var(--ease), background var(--dur) var(--ease);
+    color:var(--ink);
+    transition: transform 0.3s var(--ease), border-color 0.3s var(--ease);
   }
-  .play-btn:hover{ transform: scale(1.08); }
+  .play-btn:hover{ border-color:var(--blue); color:var(--blue); transform: scale(1.05); }
   .play-btn svg{ width:16px; height:16px; }
   .player-info{ overflow:hidden; }
   .player-title{ font-size:0.86rem; font-weight:600; white-space:nowrap; }
@@ -500,7 +500,7 @@
     .nav-links.open{ right:0; }
     .nav-toggle-btn{ display:block; }
     section{ padding:110px 6vw 70px; }
-    .player{ max-width:210px; }
+    .player{ padding:8px 14px; }
   }
 </style>
 </head>
@@ -654,7 +654,7 @@
 
 <footer>© 2026 Shinan Unneenkutty P — Designed with intent.</footer>
 
-<div class="player glass" id="player">
+<div class="player" id="player">
   <button class="play-btn" id="playBtn" aria-label="Play favorite song">
     <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
     <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
