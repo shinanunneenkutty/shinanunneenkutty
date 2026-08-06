@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Shinan Unneenkutty P — Personal Portfolio</title>
+<meta name="description" content="Personal portfolio of Shinan Unneenkutty P — a student from Kerala, India who loves technology, cinema, cricket and exploring interesting corners of the internet." />
+<meta name="author" content="Shinan Unneenkutty P" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Shinan Unneenkutty P — Personal Portfolio" />
+<meta property="og:description" content="Student · Tech Enthusiast · Cricket & Cinema Lover. This is my little corner of the web." />
+<meta property="og:image" content="assets/sk21.jpg" />
+<meta property="og:locale" content="en_IN" />
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="alternate icon" href="assets/favicon.svg" />
+<link rel="apple-touch-icon" href="assets/favicon.svg" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Page load veil -->
+<div class="load-veil" id="loadVeil" aria-hidden="true">
+  <span class="load-mark">SK21</span>
+</div>
+
+<!-- ================= NAVIGATION ================= -->
+<header class="nav-wrap">
+  <nav class="nav glass" id="siteNav" aria-label="Primary">
+    <a href="#home" class="nav-mark" aria-label="Home — SP monogram">SP</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" class="nav-link" data-section="home">Home</a></li>
+      <li><a href="#about" class="nav-link" data-section="about">About</a></li>
+      <li><a href="#interests" class="nav-link" data-section="interests">Interests</a></li>
+      <li><a href="#connect" class="nav-link" data-section="connect">Connect</a></li>
+      <li><a href="#play" class="nav-link" data-section="play">Play</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<main id="home">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="hero">
+    <canvas id="heroCanvas" aria-hidden="true"></canvas>
+    <div class="hero-inner reveal">
+      <p class="eyebrow">Kerala, India</p>
+      <h1 class="hero-title">Hi, I'm <span class="hero-name">Shinan.</span></h1>
+      <p class="hero-tagline">Student <span class="dot">·</span> Tech Enthusiast <span class="dot">·</span> Cricket &amp; Cinema Lover</p>
+      <p class="hero-intro">
+        I'm Shinan Unneenkutty P, a student from Kerala, India. I enjoy technology, movies,
+        cricket and exploring interesting things on the internet. This is my little corner of the web.
+      </p>
+      <div class="hero-actions">
+        <a href="#interests" class="btn btn-primary">Explore My World</a>
+        <a href="#connect" class="btn btn-glass">Connect With Me</a>
+      </div>
+    </div>
+    <a href="#about" class="scroll-cue" aria-label="Scroll to About section">
+      <span></span>
+    </a>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section class="section" id="about">
+    <div class="section-inner about-grid reveal">
+      <div class="about-visual">
+        <div class="avatar-frame glass">
+          <img src="assets/sk21.PNG" alt="Shinan Unneenkutty P" class="avatar-img" onerror="this.parentElement.classList.add('avatar-empty')" />
+          <span class="avatar-fallback">SK21</span>
+        </div>
+      </div>
+      <div class="about-content">
+        <p class="section-eyebrow">About</p>
+        <h2 class="section-title">A little more about me</h2>
+        <p class="about-text">
+          I'm a student who enjoys discovering new technology, watching movies, following cricket
+          and spending time exploring things that interest me. I created this website as a personal
+          space on the internet where people can know a little more about me.
+        </p>
+        <dl class="about-facts">
+          <div class="fact">
+            <dt>Name</dt>
+            <dd>Shinan Unneenkutty P</dd>
+          </div>
+          <div class="fact">
+            <dt>From</dt>
+            <dd>Kerala, India</dd>
+          </div>
+          <div class="fact">
+            <dt>Languages</dt>
+            <dd>Malayalam · English · Hindi</dd>
+          </div>
+          <div class="fact">
+            <dt>Interests</dt>
+            <dd>Technology · Movies · Cricket · Gaming</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INTERESTS ================= -->
+  <section class="section" id="interests">
+    <div class="section-inner reveal">
+      <p class="section-eyebrow">Things I Like</p>
+      <h2 class="section-title">What fills my time</h2>
+
+      <div class="card-grid">
+        <article class="tile glass" tabindex="0">
+          <span class="tile-icon">🏏</span>
+          <h3>Cricket</h3>
+          <p>Cricket is one of my favourite sports and something I love following and watching.</p>
+        </article>
+        <article class="tile glass" tabindex="0">
+          <span class="tile-icon">🎬</span>
+          <h3>Movies</h3>
+          <p>I enjoy watching movies and discovering interesting films and cinematic experiences.</p>
+        </article>
+        <article class="tile glass" tabindex="0">
+          <span class="tile-icon">💻</span>
+          <h3>Technology</h3>
+          <p>I'm interested in technology, smartphones, websites and discovering what new technology can do.</p>
+        </article>
+        <article class="tile glass" tabindex="0">
+          <span class="tile-icon">🎮</span>
+          <h3>Gaming</h3>
+          <p>I enjoy gaming, particularly football games such as eFootball.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MY CORNER ================= -->
+  <section class="section section-tint" id="corner">
+    <div class="section-inner reveal">
+      <p class="section-eyebrow">My Corner</p>
+      <h2 class="section-title">A little playground</h2>
+
+      <div class="corner-grid">
+
+        <!-- Live scoreboard clock -->
+        <div class="corner-card glass corner-clock">
+          <h3>Local Time</h3>
+          <div class="scoreboard" id="scoreboard" aria-live="polite">
+            <div class="flip-group">
+              <span class="flip-digit" id="flipH">--</span>
+              <span class="flip-colon">:</span>
+              <span class="flip-digit" id="flipM">--</span>
+              <span class="flip-colon">:</span>
+              <span class="flip-digit" id="flipS">--</span>
+            </div>
+            <p class="scoreboard-caption" id="dateLine">—</p>
+          </div>
+        </div>
+
+        <!-- Quote generator -->
+        <div class="corner-card glass corner-quote">
+          <h3>Quote of the Moment</h3>
+          <p class="quote-text" id="quoteText">"The process is more important than the result."</p>
+          <p class="quote-author" id="quoteAuthor">— MS Dhoni</p>
+          <button class="btn btn-mini" id="quoteBtn">New Quote</button>
+        </div>
+
+        <!-- Cricket micro-animation -->
+        <div class="corner-card glass corner-cricket">
+          <h3>Over in Progress</h3>
+          <div class="pitch" id="pitchAnim">
+            <div class="ball" id="cricketBall"></div>
+            <div class="stumps"></div>
+          </div>
+          <button class="btn btn-mini" id="bowlBtn">Bowl</button>
+        </div>
+
+        <!-- Visitor interaction / easter egg -->
+        <div class="corner-card glass corner-egg">
+          <h3>Say Hi</h3>
+          <p class="egg-hint">Click the monogram a few times…</p>
+          <button class="egg-trigger" id="eggTrigger" aria-label="Secret interaction">SK21</button>
+          <p class="egg-message" id="eggMessage" aria-live="polite"></p>
+        </div>
+
+        <!-- Theme interaction -->
+        <div class="corner-card glass corner-theme">
+          <h3>Shift the Light</h3>
+          <p class="egg-hint">Try a different mood for the page.</p>
+          <div class="theme-row" id="themeRow">
+            <button class="theme-dot theme-default" data-theme="default" aria-label="Default theme"></button>
+            <button class="theme-dot theme-dusk" data-theme="dusk" aria-label="Dusk theme"></button>
+            <button class="theme-dot theme-mint" data-theme="mint" aria-label="Mint theme"></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONNECT ================= -->
+  <section class="section" id="connect">
+    <div class="section-inner reveal connect-inner">
+      <p class="section-eyebrow">Connect With Me</p>
+      <h2 class="section-title">Let's Connect</h2>
+      <p class="connect-sub">Find me around the internet.</p>
+
+      <div class="social-grid" id="socialGrid" aria-label="Social media links">
+        <!-- Populated by script.js from SOCIAL_LINKS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PLAY / SNAKE GAME ================= -->
+  <section class="section section-tint" id="play">
+    <div class="section-inner reveal">
+      <p class="section-eyebrow">Take a Break</p>
+      <h2 class="section-title">A quick game</h2>
+
+      <div class="game-wrap glass">
+        <div class="game-hud">
+          <div class="hud-stat">
+            <span class="hud-label">Score</span>
+            <span class="hud-value" id="score">0</span>
+          </div>
+          <div class="hud-stat">
+            <span class="hud-label">High Score</span>
+            <span class="hud-value" id="highScore">0</span>
+          </div>
+          <div class="hud-actions">
+            <button class="btn btn-mini" id="startBtn">Start</button>
+            <button class="btn btn-mini" id="pauseBtn" disabled>Pause</button>
+            <button class="btn btn-mini" id="restartBtn">Restart</button>
+          </div>
+        </div>
+
+        <div class="game-board-wrap">
+          <canvas id="snakeCanvas" aria-label="Snake game board" role="img"></canvas>
+          <div class="game-overlay" id="gameOverlay">
+            <p id="gameOverlayText">Press Start to play</p>
+          </div>
+        </div>
+
+        <div class="touch-controls" id="touchControls" aria-hidden="true">
+          <button class="touch-btn touch-up" data-dir="up" aria-label="Move up">↑</button>
+          <button class="touch-btn touch-left" data-dir="left" aria-label="Move left">←</button>
+          <button class="touch-btn touch-down" data-dir="down" aria-label="Move down">↓</button>
+          <button class="touch-btn touch-right" data-dir="right" aria-label="Move right">→</button>
+        </div>
+        <p class="game-hint">Arrow keys / WASD on desktop · swipe or use the pad on mobile</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-line">Designed &amp; built by Shinan Unneenkutty P</p>
+    <p class="footer-sub">Kerala, India · <span id="footerYear">2026</span></p>
+    <div class="social-grid social-grid-small" id="socialGridFooter" aria-label="Social media links"></div>
+    <p class="footer-fun" id="footerFun"></p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
