@@ -843,6 +843,105 @@ async function register(event){
 
   event.preventDefault();
 
+  const username = $("ru").value.trim();
+  const password = $("rp").value;
+  const confirmPassword = $("rc").value;
+
+  if(!/^[A-Za-z0-9_.]{3,20}$/.test(username)){
+    return toast(
+      "Username must be 3–20 characters and use only letters, numbers, _ or ."
+    );
+  }
+
+  if(password.length < 8){
+    return toast(
+      "Password must contain at least 8 characters."
+    );
+  }
+
+  if(password !== confirmPassword){
+    return toast(
+      "Passwords do not match."
+    );
+  }
+
+  const normalized = username.toLowerCase();
+
+  /*
+   * Check whether username already exists.
+   */
+
+  const {
+    data: existing,
+    error: existingError
+  } = await sb
+    .from("profiles")
+    .select("id")
+    .eq("username_normalized", normalized)
+    .maybeSingle();
+
+  if(existingError){
+    return toast(existingError.message);
+  }
+
+  if(existing){
+    return toast("That username is already taken.");
+  }
+
+  /*
+   * Create Supabase Auth account.
+   *
+   * The password is handled by Supabase Auth.
+   * We never store the password ourselves.
+   */
+
+  const {
+    data,
+    error
+  } = await sb.auth.signUp({
+
+    email: usernameEmail(normalized),
+
+    password: password,
+
+    options: {
+
+      data: {
+        username: username,
+        display_name: username
+      }
+
+    }
+
+  });
+
+  if(error){
+    return toast(error.message);
+  }
+
+  /*
+   * The database trigger now creates
+   * the public.profiles row automatically.
+   */
+
+  if(data.user){
+
+    toast("Account created successfully.");
+
+    await loadSession();
+
+  }else{
+
+    toast(
+      "Account created. Please complete authentication."
+    );
+
+  }
+
+}
+
+  event.preventDefault();
+
   const username =
     $("ru").value.trim();
 
