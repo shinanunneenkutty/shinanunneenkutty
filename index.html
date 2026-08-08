@@ -1,305 +1,3467 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Connect — Username Chat</title>
-  <meta name="description" content="A privacy-conscious username-based social chat platform.">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root{--bg:#f6f7fb;--card:#fff;--text:#15171a;--muted:#707783;--line:#e5e7eb;--primary:#4f46e5;--primary2:#4338ca;--bubble:#eef0ff;--danger:#dc2626;--success:#16a34a;--shadow:0 12px 40px rgba(15,23,42,.08)}
-    *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
-    button,input,textarea{font:inherit}button{cursor:pointer;border:0}.hidden{display:none!important}.muted{color:var(--muted)}.small{font-size:12px}
-    .auth{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at top right,#e8e7ff,transparent 40%),var(--bg)}
-    .auth-card{width:min(430px,100%);background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px;box-shadow:var(--shadow)}
-    .brand{font-weight:800;font-size:24px;letter-spacing:-.5px}.brand span{color:var(--primary)}h1{font-size:32px;margin:22px 0 8px;letter-spacing:-1px}h2{margin:0 0 6px}p{line-height:1.5}
-    .field{margin:16px 0}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}.field input,.field textarea,.search{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;outline:0;background:#fff}.field input:focus,.field textarea:focus,.search:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.12)}
-    .primary{background:var(--primary);color:#fff;padding:12px 16px;border-radius:12px;font-weight:700;width:100%}.primary:hover{background:var(--primary2)}
-    .secondary{background:#fff;color:var(--text);border:1px solid var(--line);padding:10px 14px;border-radius:10px;font-weight:650}.danger{color:var(--danger);background:#fff;border:1px solid #fecaca;padding:10px 14px;border-radius:10px}
-    .link{background:none;color:var(--primary);font-weight:700;padding:0}.error{background:#fef2f2;color:#991b1b;border:1px solid #fecaca;padding:10px 12px;border-radius:10px;margin:12px 0;font-size:13px}
-    .app{height:100vh;display:grid;grid-template-columns:280px 1fr}.sidebar{background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;padding:18px;min-width:0}.profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;background:#f8f8fc}.avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#e8eaf2;display:grid;place-items:center;font-weight:800;color:#4b5563;flex:none}.avatar.sm{width:34px;height:34px;font-size:12px}.avatar.lg{width:72px;height:72px;font-size:24px}.mini-name{font-weight:750}.nav{display:grid;gap:5px;margin:18px 0}.nav button{padding:11px 12px;text-align:left;border-radius:10px;background:transparent;color:#454b55;font-weight:650}.nav button.active,.nav button:hover{background:#eef0ff;color:var(--primary)}.side-bottom{margin-top:auto;display:grid;gap:8px}
-    .main{min-width:0;display:flex;flex-direction:column}.topbar{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px}.topbar-title{font-size:18px;font-weight:800}.content{padding:24px;overflow:auto}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}.card h3{margin:0 0 12px;font-size:15px}.hero{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:0}.hero p{opacity:.88}.hero .search{margin-top:14px}
-    .list{display:grid;gap:9px}.item{display:flex;align-items:center;gap:11px;padding:11px;border:1px solid var(--line);border-radius:13px}.item-main{min-width:0;flex:1}.item-name{font-weight:750}.truncate{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.actions{display:flex;gap:7px;flex-wrap:wrap}.pill{font-size:11px;padding:4px 7px;border-radius:999px;background:#f0f1f5;color:#646b75}.online{color:var(--success)}.empty{padding:24px;text-align:center;color:var(--muted)}
-    .chat-layout{height:calc(100vh - 68px);display:grid;grid-template-columns:310px 1fr}.chat-list{background:#fff;border-right:1px solid var(--line);overflow:auto;padding:14px}.chat-window{display:flex;flex-direction:column;min-width:0}.chat-header{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 18px}.messages{flex:1;overflow:auto;padding:22px;display:flex;flex-direction:column;gap:8px}.bubble-row{display:flex}.bubble-row.mine{justify-content:flex-end}.bubble{max-width:min(70%,560px);padding:10px 13px;border-radius:16px;background:#fff;border:1px solid var(--line);box-shadow:0 2px 8px rgba(15,23,42,.03)}.mine .bubble{background:var(--bubble);border-color:#dfe2ff}.bubble .time{font-size:10px;color:var(--muted);margin-top:4px;text-align:right}.composer{padding:12px 16px;background:#fff;border-top:1px solid var(--line);display:flex;gap:8px}.composer input{flex:1;border:1px solid var(--line);border-radius:12px;padding:12px}.send{background:var(--primary);color:#fff;border-radius:12px;padding:0 18px;font-weight:750}
-    .profile-page{max-width:760px}.profile-cover{display:flex;gap:18px;align-items:center}.profile-actions{margin-left:auto;display:flex;gap:8px}.badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}.dot{width:7px;height:7px;border-radius:50%;background:#9ca3af}.dot.on{background:#22c55e}
-    .modal-back{position:fixed;inset:0;background:rgba(15,23,42,.45);display:grid;place-items:center;padding:20px;z-index:20}.modal{width:min(520px,100%);background:#fff;border-radius:20px;padding:22px;box-shadow:var(--shadow)}.modal-head{display:flex;justify-content:space-between;align-items:center}
-    .toast{position:fixed;right:18px;bottom:18px;background:#17191d;color:#fff;padding:12px 15px;border-radius:11px;z-index:50;box-shadow:var(--shadow);max-width:330px}
-    .mobile-nav{display:none}
-    @media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{display:none}.topbar{padding:0 16px}.content{padding:16px;padding-bottom:86px}.grid{grid-template-columns:1fr}.chat-layout{height:calc(100vh - 68px);grid-template-columns:1fr}.chat-list{display:none}.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;height:64px;background:#fff;border-top:1px solid var(--line);z-index:15;justify-content:space-around}.mobile-nav button{background:none;color:#59616c;font-size:11px;font-weight:700}.mobile-nav button.active{color:var(--primary)}.bubble{max-width:82%}.profile-actions{margin-left:0}.profile-cover{align-items:flex-start;flex-wrap:wrap}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Connect — Username Chat</title>
+<meta name="description" content="Username-based social messaging platform">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root{
+  --bg:#f6f7fb;
+  --card:#fff;
+  --text:#15171a;
+  --muted:#707783;
+  --line:#e5e7eb;
+  --primary:#4f46e5;
+  --primary2:#4338ca;
+  --bubble:#eef0ff;
+  --danger:#dc2626;
+  --success:#16a34a;
+  --shadow:0 12px 40px rgba(15,23,42,.08)
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text)
+}
+
+button,input,textarea{font:inherit}
+button{cursor:pointer;border:0}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+
+.auth{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at top right,#e8e7ff,transparent 40%),
+    var(--bg)
+}
+
+.auth-card{
+  width:min(430px,100%);
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:32px;
+  box-shadow:var(--shadow)
+}
+
+.brand{
+  font-weight:800;
+  font-size:24px;
+  letter-spacing:-.5px
+}
+
+.brand span{color:var(--primary)}
+
+h1{
+  font-size:32px;
+  margin:22px 0 8px;
+  letter-spacing:-1px
+}
+
+h2{margin:0 0 6px}
+p{line-height:1.5}
+
+.field{margin:16px 0}
+
+.field label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:7px
+}
+
+.field input,
+.field textarea,
+.search{
+  width:100%;
+  padding:12px 14px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  outline:0;
+  background:#fff
+}
+
+.field input:focus,
+.field textarea:focus,
+.search:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(79,70,229,.12)
+}
+
+.primary{
+  background:var(--primary);
+  color:#fff;
+  padding:12px 16px;
+  border-radius:12px;
+  font-weight:700;
+  width:100%
+}
+
+.primary:hover{background:var(--primary2)}
+
+.secondary{
+  background:#fff;
+  color:var(--text);
+  border:1px solid var(--line);
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:650
+}
+
+.danger{
+  color:var(--danger);
+  background:#fff;
+  border:1px solid #fecaca;
+  padding:10px 14px;
+  border-radius:10px
+}
+
+.link{
+  background:none;
+  color:var(--primary);
+  font-weight:700;
+  padding:0
+}
+
+.error{
+  background:#fef2f2;
+  color:#991b1b;
+  border:1px solid #fecaca;
+  padding:10px 12px;
+  border-radius:10px;
+  margin:12px 0;
+  font-size:13px
+}
+
+.app{
+  height:100vh;
+  display:grid;
+  grid-template-columns:280px 1fr
+}
+
+.sidebar{
+  background:#fff;
+  border-right:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  padding:18px;
+  min-width:0
+}
+
+.profile-mini{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  border-radius:14px;
+  background:#f8f8fc
+}
+
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#e8eaf2;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  color:#4b5563;
+  flex:none
+}
+
+.avatar.sm{
+  width:34px;
+  height:34px;
+  font-size:12px
+}
+
+.avatar.lg{
+  width:72px;
+  height:72px;
+  font-size:24px
+}
+
+.mini-name{font-weight:750}
+
+.nav{
+  display:grid;
+  gap:5px;
+  margin:18px 0
+}
+
+.nav button{
+  padding:11px 12px;
+  text-align:left;
+  border-radius:10px;
+  background:transparent;
+  color:#454b55;
+  font-weight:650
+}
+
+.nav button.active,
+.nav button:hover{
+  background:#eef0ff;
+  color:var(--primary)
+}
+
+.side-bottom{
+  margin-top:auto;
+  display:grid;
+  gap:8px
+}
+
+.main{
+  min-width:0;
+  display:flex;
+  flex-direction:column
+}
+
+.topbar{
+  height:68px;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px
+}
+
+.topbar-title{
+  font-size:18px;
+  font-weight:800
+}
+
+.content{
+  padding:24px;
+  overflow:auto
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px
+}
+
+.card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:18px
+}
+
+.card h3{
+  margin:0 0 12px;
+  font-size:15px
+}
+
+.hero{
+  background:linear-gradient(135deg,#4f46e5,#7c3aed);
+  color:#fff;
+  border:0
+}
+
+.hero p{opacity:.88}
+
+.hero .search{margin-top:14px}
+
+.list{
+  display:grid;
+  gap:9px
+}
+
+.item{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:11px;
+  border:1px solid var(--line);
+  border-radius:13px
+}
+
+.item-main{
+  min-width:0;
+  flex:1
+}
+
+.item-name{font-weight:750}
+
+.truncate{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+
+.actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap
+}
+
+.pill{
+  font-size:11px;
+  padding:4px 7px;
+  border-radius:999px;
+  background:#f0f1f5;
+  color:#646b75
+}
+
+.online{color:var(--success)}
+
+.empty{
+  padding:24px;
+  text-align:center;
+  color:var(--muted)
+}
+
+.chat-layout{
+  height:calc(100vh - 68px);
+  display:grid;
+  grid-template-columns:310px 1fr
+}
+
+.chat-list{
+  background:#fff;
+  border-right:1px solid var(--line);
+  overflow:auto;
+  padding:14px
+}
+
+.chat-window{
+  display:flex;
+  flex-direction:column;
+  min-width:0
+}
+
+.chat-header{
+  height:68px;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 18px
+}
+
+.messages{
+  flex:1;
+  overflow:auto;
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  gap:8px
+}
+
+.bubble-row{display:flex}
+
+.bubble-row.mine{justify-content:flex-end}
+
+.bubble{
+  max-width:min(70%,560px);
+  padding:10px 13px;
+  border-radius:16px;
+  background:#fff;
+  border:1px solid var(--line);
+  box-shadow:0 2px 8px rgba(15,23,42,.03)
+}
+
+.mine .bubble{
+  background:var(--bubble);
+  border-color:#dfe2ff
+}
+
+.bubble .time{
+  font-size:10px;
+  color:var(--muted);
+  margin-top:4px;
+  text-align:right
+}
+
+.composer{
+  padding:12px 16px;
+  background:#fff;
+  border-top:1px solid var(--line);
+  display:flex;
+  gap:8px
+}
+
+.composer input{
+  flex:1;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px
+}
+
+.send{
+  background:var(--primary);
+  color:#fff;
+  border-radius:12px;
+  padding:0 18px;
+  font-weight:750
+}
+
+.profile-page{max-width:760px}
+
+.profile-cover{
+  display:flex;
+  gap:18px;
+  align-items:center
+}
+
+.profile-actions{
+  margin-left:auto;
+  display:flex;
+  gap:8px
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  font-size:12px;
+  color:var(--muted)
+}
+
+.dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#9ca3af
+}
+
+.dot.on{background:#22c55e}
+
+.toast{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  background:#17191d;
+  color:#fff;
+  padding:12px 15px;
+  border-radius:11px;
+  z-index:50;
+  box-shadow:var(--shadow);
+  max-width:330px
+}
+
+.mobile-nav{display:none}
+
+@media(max-width:850px){
+
+  .app{
+    grid-template-columns:1fr
+  }
+
+  .sidebar{
+    display:none
+  }
+
+  .topbar{
+    padding:0 16px
+  }
+
+  .content{
+    padding:16px;
+    padding-bottom:86px
+  }
+
+  .grid{
+    grid-template-columns:1fr
+  }
+
+  .chat-layout{
+    height:calc(100vh - 68px);
+    grid-template-columns:1fr
+  }
+
+  .chat-list{
+    display:none
+  }
+
+  .mobile-nav{
+    display:flex;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    height:64px;
+    background:#fff;
+    border-top:1px solid var(--line);
+    z-index:15;
+    justify-content:space-around
+  }
+
+  .mobile-nav button{
+    background:none;
+    color:#59616c;
+    font-size:11px;
+    font-weight:700
+  }
+
+  .mobile-nav button.active{
+    color:var(--primary)
+  }
+
+  .bubble{
+    max-width:82%
+  }
+
+  .profile-actions{
+    margin-left:0
+  }
+
+  .profile-cover{
+    align-items:flex-start;
+    flex-wrap:wrap
+  }
+}
+</style>
 </head>
+
 <body>
+
 <div id="root"></div>
+
 <div id="toast" class="toast hidden"></div>
 
 <script>
-/*
-  CONNECT — single-file frontend
-  Backend: Supabase Auth + PostgreSQL + Realtime + Storage.
-  Replace the two values below with your Supabase project credentials.
-*/
-const SUPABASE_URL = "https://xyighgzwwpgzwmcxzbgh.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_RLtmcNI7JAzOqsV2LcbXkQ_eYcsWEqN";
 
-let sb = null;
-if (!SUPABASE_URL.startsWith("YOUR_") && !SUPABASE_ANON_KEY.startsWith("YOUR_")) {
-  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
+/* =========================================================
+   SUPABASE CONFIGURATION
+   ========================================================= */
+
+const SUPABASE_URL =
+"https://xyighgzwwpgzwmcxzbgh.supabase.co";
+
+const SUPABASE_ANON_KEY =
+"sb_publishable_RLtmcNI7JAzOqsV2LcbXkQ_eYcsWEqN";
+
+
+/* =========================================================
+   SUPABASE CLIENT
+   ========================================================= */
+
+const sb = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+
+/* =========================================================
+   APPLICATION STATE
+   ========================================================= */
 
 const state = {
-  user:null, profile:null, page:"home", search:"", searchResults:[], friends:[], requests:[],
-  chats:[], activeConversation:null, activeFriend:null, messages:[], channel:null, presence:null
+
+  user:null,
+  profile:null,
+
+  page:"home",
+
+  search:"",
+  searchResults:[],
+
+  friends:[],
+  requests:[],
+  chats:[],
+
+  activeConversation:null,
+  activeFriend:null,
+
+  messages:[],
+
+  channel:null
 };
 
-const $ = id => document.getElementById(id);
-const esc = s => String(s ?? "").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-const usernameEmail = u => `${u.toLowerCase()}@username.local`;
-const initials = name => (name||"?").trim().slice(0,2).toUpperCase();
-const avatar = (p, cls="") => p?.avatar_url ? `<img class="avatar ${cls}" src="${esc(p.avatar_url)}" alt="">` : `<div class="avatar ${cls}">${esc(initials(p?.display_name||p?.username))}</div>`;
-const fmt = d => new Date(d).toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
-const online = p => !!p?.online_status;
-function toast(msg){$("toast").textContent=msg;$("toast").classList.remove("hidden");setTimeout(()=>$("toast").classList.add("hidden"),2600)}
-function showError(msg){return `<div class="error">${esc(msg)}</div>`}
 
-function render(){
-  if(!sb){ $("root").innerHTML = setupScreen(); return; }
-  if(!state.user){ $("root").innerHTML = authScreen(); return; }
-  $("root").innerHTML = appScreen();
-  afterRender();
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+const $ = id => document.getElementById(id);
+
+const esc = value =>
+String(value ?? "").replace(/[&<>"']/g,m=>({
+
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#039;"
+
+}[m]));
+
+const usernameEmail =
+username => `${username.toLowerCase()}@username.local`;
+
+const initials =
+name => (name || "?").trim().slice(0,2).toUpperCase();
+
+const avatar = (profile,cls="") => {
+
+  if(profile?.avatar_url){
+
+    return `
+      <img
+        class="avatar ${cls}"
+        src="${esc(profile.avatar_url)}"
+        alt=""
+      >
+    `;
+  }
+
+  return `
+    <div class="avatar ${cls}">
+      ${esc(
+        initials(
+          profile?.display_name ||
+          profile?.username
+        )
+      )}
+    </div>
+  `;
+};
+
+const fmt = date =>
+new Date(date).toLocaleString([],{
+  month:"short",
+  day:"numeric",
+  hour:"numeric",
+  minute:"2-digit"
+});
+
+const isOnline =
+profile => !!profile?.online_status;
+
+
+function toast(message){
+
+  const element = $("toast");
+
+  element.textContent = message;
+
+  element.classList.remove("hidden");
+
+  setTimeout(()=>{
+    element.classList.add("hidden");
+  },2600);
 }
-function setupScreen(){
- return `<div class="auth"><div class="auth-card"><div class="brand">con<span>nect</span></div><h1>Connect people by username.</h1><p class="muted">The app is ready. Add your Supabase URL and anon key in this file, then run the SQL in <b>schema.sql</b>.</p><p class="small muted">Never put a Supabase service-role key in this file.</p><button class="primary" onclick="location.reload()">Reload after configuration</button></div></div>`;
-}
+
+
+/* =========================================================
+   AUTH SCREEN
+   ========================================================= */
+
+let authMode = "login";
+
+
 function authScreen(){
- return `<div class="auth"><div class="auth-card">
-   <div class="brand">con<span>nect</span></div>
-   <div id="auth-box"></div>
- </div></div>`;
+
+  return `
+    <div class="auth">
+
+      <div class="auth-card">
+
+        <div class="brand">
+          con<span>nect</span>
+        </div>
+
+        <div id="auth-box"></div>
+
+      </div>
+
+    </div>
+  `;
 }
-let authMode="login";
+
+
 function authBox(){
- $("auth-box").innerHTML = authMode==="login" ? `
-   <h1>Welcome back</h1><p class="muted">Log in with your username and password.</p>
-   <form onsubmit="login(event)">
-     <div class="field"><label>Username</label><input id="au" required minlength="3" maxlength="20" autocomplete="username"></div>
-     <div class="field"><label>Password</label><input id="ap" type="password" required autocomplete="current-password"></div>
-     <button class="primary">Login</button>
-   </form>
-   <p class="muted small" style="margin-top:18px">New here? <button class="link" onclick="authMode='register';authBox()">Create an account</button></p>
- ` : `
-   <h1>Create account</h1><p class="muted">Choose a unique username and a password.</p>
-   <form onsubmit="register(event)">
-     <div class="field"><label>Username</label><input id="ru" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_.]+" autocomplete="username"></div>
-     <div class="field"><label>Password</label><input id="rp" type="password" required minlength="8" autocomplete="new-password"></div>
-     <div class="field"><label>Confirm password</label><input id="rc" type="password" required minlength="8" autocomplete="new-password"></div>
-     <button class="primary">Create Account</button>
-   </form>
-   <p class="muted small" style="margin-top:18px">Already registered? <button class="link" onclick="authMode='login';authBox()">Log in</button></p>
- `;
+
+  const box = $("auth-box");
+
+  if(!box) return;
+
+  if(authMode === "login"){
+
+    box.innerHTML = `
+
+      <h1>Welcome back</h1>
+
+      <p class="muted">
+        Log in with your username and password.
+      </p>
+
+      <form onsubmit="login(event)">
+
+        <div class="field">
+
+          <label>Username</label>
+
+          <input
+            id="au"
+            required
+            minlength="3"
+            maxlength="20"
+            autocomplete="username"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>Password</label>
+
+          <input
+            id="ap"
+            type="password"
+            required
+            autocomplete="current-password"
+          >
+
+        </div>
+
+        <button class="primary">
+          Login
+        </button>
+
+      </form>
+
+      <p class="muted small"
+         style="margin-top:18px">
+
+        New here?
+
+        <button
+          class="link"
+          onclick="authMode='register';authBox()"
+        >
+          Create an account
+        </button>
+
+      </p>
+    `;
+  }
+
+  else{
+
+    box.innerHTML = `
+
+      <h1>Create account</h1>
+
+      <p class="muted">
+        Choose a unique username and password.
+      </p>
+
+      <form onsubmit="register(event)">
+
+        <div class="field">
+
+          <label>Username</label>
+
+          <input
+            id="ru"
+            required
+            minlength="3"
+            maxlength="20"
+            pattern="[A-Za-z0-9_.]+"
+            autocomplete="username"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>Password</label>
+
+          <input
+            id="rp"
+            type="password"
+            required
+            minlength="8"
+            autocomplete="new-password"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>Confirm password</label>
+
+          <input
+            id="rc"
+            type="password"
+            required
+            minlength="8"
+            autocomplete="new-password"
+          >
+
+        </div>
+
+        <button class="primary">
+          Create Account
+        </button>
+
+      </form>
+
+      <p class="muted small"
+         style="margin-top:18px">
+
+        Already registered?
+
+        <button
+          class="link"
+          onclick="authMode='login';authBox()"
+        >
+          Log in
+        </button>
+
+      </p>
+    `;
+  }
 }
-async function register(e){
- e.preventDefault(); const u=$("ru").value.trim(), p=$("rp").value, c=$("rc").value;
- if(!/^[A-Za-z0-9_.]{3,20}$/.test(u)) return toast("Username must be 3–20 letters, numbers, _ or .");
- if(p!==c) return toast("Passwords do not match.");
- const normalized=u.toLowerCase();
- const {data:exists,error:xerr}=await sb.from("profiles").select("id").eq("username_normalized",normalized).maybeSingle();
- if(xerr) return toast(xerr.message);
- if(exists) return toast("That username is already taken.");
- const {data,error}=await sb.auth.signUp({email:usernameEmail(normalized),password:p});
- if(error) return toast(error.message);
- if(data.user){
-   const {error:perr}=await sb.from("profiles").insert({id:data.user.id,username:u,username_normalized:normalized,display_name:u});
-   if(perr){await sb.auth.signOut();return toast(perr.message);}
- }
- toast("Account created.");
- await loadSession();
+
+
+/* =========================================================
+   REGISTRATION
+   ========================================================= */
+
+async function register(event){
+
+  event.preventDefault();
+
+  const username =
+    $("ru").value.trim();
+
+  const password =
+    $("rp").value;
+
+  const confirmPassword =
+    $("rc").value;
+
+  if(
+    !/^[A-Za-z0-9_.]{3,20}$/.test(username)
+  ){
+
+    return toast(
+      "Username must be 3–20 characters and use only letters, numbers, _ or ."
+    );
+  }
+
+  if(password !== confirmPassword){
+
+    return toast(
+      "Passwords do not match."
+    );
+  }
+
+  const normalized =
+    username.toLowerCase();
+
+
+  /* Check username */
+
+  const {
+    data:existing,
+    error:existingError
+  } =
+  await sb
+    .from("profiles")
+    .select("id")
+    .eq("username_normalized",normalized)
+    .maybeSingle();
+
+  if(existingError){
+
+    return toast(
+      existingError.message
+    );
+  }
+
+  if(existing){
+
+    return toast(
+      "That username is already taken."
+    );
+  }
+
+
+  /* Create authentication account */
+
+  const {
+    data,
+    error
+  } =
+  await sb.auth.signUp({
+
+    email:usernameEmail(normalized),
+
+    password
+
+  });
+
+
+  if(error){
+
+    return toast(
+      error.message
+    );
+  }
+
+
+  /* Create profile */
+
+  if(data.user){
+
+    const {
+      error:profileError
+    } =
+    await sb
+      .from("profiles")
+      .insert({
+
+        id:data.user.id,
+
+        username,
+
+        username_normalized:normalized,
+
+        display_name:username
+
+      });
+
+    if(profileError){
+
+      await sb.auth.signOut();
+
+      return toast(
+        profileError.message
+      );
+    }
+  }
+
+
+  toast(
+    "Account created successfully."
+  );
+
+  await loadSession();
 }
-async function login(e){
- e.preventDefault(); const u=$("au").value.trim(), p=$("ap").value;
- const {data,error}=await sb.auth.signInWithPassword({email:usernameEmail(u),password:p});
- if(error) return toast("Invalid username or password.");
- state.user=data.user; await loadProfile(); await refreshAll(); render();
+
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+async function login(event){
+
+  event.preventDefault();
+
+  const username =
+    $("au").value.trim();
+
+  const password =
+    $("ap").value;
+
+
+  const {
+    data,
+    error
+  } =
+  await sb.auth.signInWithPassword({
+
+    email:usernameEmail(username),
+
+    password
+
+  });
+
+
+  if(error){
+
+    return toast(
+      "Invalid username or password."
+    );
+  }
+
+
+  state.user =
+    data.user;
+
+  await loadProfile();
+
+  await refreshAll();
+
+  render();
 }
-async function logout(){await sb.auth.signOut(); state.user=null; state.profile=null; state.activeConversation=null; state.messages=[]; render();}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+async function logout(){
+
+  await sb.auth.signOut();
+
+  state.user = null;
+  state.profile = null;
+
+  state.activeConversation = null;
+  state.activeFriend = null;
+
+  state.messages = [];
+
+  render();
+}
+
+
+/* =========================================================
+   MAIN APPLICATION
+   ========================================================= */
 
 function appScreen(){
- const nav = [
-  ["home","⌂","Home"],["search","⌕","Search"],["friends","♙","Friends"],["messages","✉","Messages"],["settings","⚙","Settings"]
- ];
- return `<div class="app">
-  <aside class="sidebar">
-   <div class="profile-mini">${avatar(state.profile,"sm")}<div class="item-main"><div class="mini-name">${esc(state.profile?.display_name||state.profile?.username)}</div><div class="small muted">@${esc(state.profile?.username)}</div></div></div>
-   <div class="nav">${nav.map(n=>`<button class="${state.page===n[0]?'active':''}" onclick="go('${n[0]}')">${n[1]} &nbsp; ${n[2]}</button>`).join("")}</div>
-   <div class="side-bottom"><button class="secondary" onclick="openProfile(state.profile.username)">View profile</button><button class="secondary" onclick="logout()">Log out</button></div>
-  </aside>
-  <main class="main">
-   <header class="topbar"><div class="topbar-title">${esc(pageTitle())}</div><div>${avatar(state.profile,"sm")}</div></header>
-   <div class="content">${pageContent()}</div>
-  </main>
-  <nav class="mobile-nav">${nav.map(n=>`<button class="${state.page===n[0]?'active':''}" onclick="go('${n[0]}')"><div style="font-size:19px">${n[1]}</div>${n[2]}</button>`).join("")}</nav>
- </div>`;
+
+  const nav = [
+
+    ["home","⌂","Home"],
+    ["search","⌕","Search"],
+    ["friends","♙","Friends"],
+    ["messages","✉","Messages"],
+    ["settings","⚙","Settings"]
+
+  ];
+
+
+  return `
+
+    <div class="app">
+
+      <aside class="sidebar">
+
+        <div class="profile-mini">
+
+          ${avatar(state.profile,"sm")}
+
+          <div class="item-main">
+
+            <div class="mini-name">
+              ${esc(
+                state.profile?.display_name ||
+                state.profile?.username
+              )}
+            </div>
+
+            <div class="small muted">
+              @${esc(state.profile?.username)}
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="nav">
+
+          ${nav.map(n=>`
+
+            <button
+              class="${state.page===n[0]?"active":""}"
+              onclick="go('${n[0]}')"
+            >
+
+              ${n[1]} &nbsp; ${n[2]}
+
+            </button>
+
+          `).join("")}
+
+        </div>
+
+
+        <div class="side-bottom">
+
+          <button
+            class="secondary"
+            onclick="openProfile('${esc(state.profile.username)}')"
+          >
+            View profile
+          </button>
+
+          <button
+            class="secondary"
+            onclick="logout()"
+          >
+            Log out
+          </button>
+
+        </div>
+
+      </aside>
+
+
+      <main class="main">
+
+        <header class="topbar">
+
+          <div class="topbar-title">
+            ${esc(pageTitle())}
+          </div>
+
+          <div>
+            ${avatar(state.profile,"sm")}
+          </div>
+
+        </header>
+
+
+        <div class="content">
+
+          ${pageContent()}
+
+        </div>
+
+      </main>
+
+
+      <nav class="mobile-nav">
+
+        ${nav.map(n=>`
+
+          <button
+            class="${state.page===n[0]?"active":""}"
+            onclick="go('${n[0]}')"
+          >
+
+            <div style="font-size:19px">
+              ${n[1]}
+            </div>
+
+            ${n[2]}
+
+          </button>
+
+        `).join("")}
+
+      </nav>
+
+    </div>
+  `;
 }
-function pageTitle(){return ({home:"Home",search:"Search users",friends:"Friends",messages:"Messages",settings:"Settings"})[state.page]||"Connect"}
+
+
+/* =========================================================
+   PAGE ROUTING
+   ========================================================= */
+
+function pageTitle(){
+
+  return {
+
+    home:"Home",
+    search:"Search users",
+    friends:"Friends",
+    messages:"Messages",
+    settings:"Settings"
+
+  }[state.page] || "Connect";
+}
+
+
 function pageContent(){
- if(state.page==="home") return homePage();
- if(state.page==="search") return searchPage();
- if(state.page==="friends") return friendsPage();
- if(state.page==="messages") return messagesPage();
- if(state.page==="settings") return settingsPage();
- return "";
+
+  if(state.page === "home")
+    return homePage();
+
+  if(state.page === "search")
+    return searchPage();
+
+  if(state.page === "friends")
+    return friendsPage();
+
+  if(state.page === "messages")
+    return messagesPage();
+
+  if(state.page === "settings")
+    return settingsPage();
+
+  return "";
 }
+
+
+/* =========================================================
+   HOME
+   ========================================================= */
+
 function homePage(){
- return `<div class="grid">
-  <section class="card hero"><h2>Welcome back, ${esc(state.profile?.display_name||state.profile?.username)} 👋</h2><p>Find people by username and start connecting.</p><input class="search" placeholder="Search @username" onkeydown="if(event.key==='Enter'){state.search=this.value;go('search')}"></section>
-  <section class="card"><h3>Friend requests</h3>${state.requests.length?state.requests.slice(0,4).map(requestItem).join(""):`<div class="empty">No pending requests.</div>`}</section>
-  <section class="card"><h3>Recent conversations</h3>${state.chats.length?state.chats.slice(0,5).map(chatItem).join(""):`<div class="empty">No conversations yet.</div>`}</section>
-  <section class="card"><h3>Online friends</h3>${state.friends.filter(x=>x.online_status).slice(0,6).map(friendItem).join("")||`<div class="empty">No friends online.</div>`}</section>
- </div>`;
+
+  return `
+
+    <div class="grid">
+
+      <section class="card hero">
+
+        <h2>
+          Welcome back,
+          ${esc(
+            state.profile?.display_name ||
+            state.profile?.username
+          )}
+          👋
+        </h2>
+
+        <p>
+          Find people by username and start connecting.
+        </p>
+
+        <input
+          class="search"
+          placeholder="Search @username"
+          onkeydown="
+            if(event.key==='Enter'){
+              state.search=this.value;
+              go('search')
+            }
+          "
+        >
+
+      </section>
+
+
+      <section class="card">
+
+        <h3>
+          Friend requests
+        </h3>
+
+        ${
+          state.requests.length
+          ?
+          state.requests
+            .slice(0,4)
+            .map(requestItem)
+            .join("")
+          :
+          `<div class="empty">
+             No pending requests.
+           </div>`
+        }
+
+      </section>
+
+
+      <section class="card">
+
+        <h3>
+          Recent conversations
+        </h3>
+
+        ${
+          state.chats.length
+          ?
+          state.chats
+            .slice(0,5)
+            .map(chatItem)
+            .join("")
+          :
+          `<div class="empty">
+             No conversations yet.
+           </div>`
+        }
+
+      </section>
+
+
+      <section class="card">
+
+        <h3>
+          Online friends
+        </h3>
+
+        ${
+          state.friends
+            .filter(x=>x.online_status)
+            .slice(0,6)
+            .map(friendItem)
+            .join("")
+          ||
+          `<div class="empty">
+             No friends online.
+           </div>`
+        }
+
+      </section>
+
+    </div>
+  `;
 }
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
 function searchPage(){
- return `<section class="card"><h3>Search users</h3><input id="searchbox" class="search" value="${esc(state.search)}" placeholder="Search by username" oninput="debouncedSearch(this.value)"><div id="search-results" class="list" style="margin-top:14px">${searchResultsHTML()}</div></section>`;
+
+  return `
+
+    <section class="card">
+
+      <h3>
+        Search users
+      </h3>
+
+      <input
+        id="searchbox"
+        class="search"
+        value="${esc(state.search)}"
+        placeholder="Search by username"
+        oninput="debouncedSearch(this.value)"
+      >
+
+      <div
+        id="search-results"
+        class="list"
+        style="margin-top:14px"
+      >
+        ${searchResultsHTML()}
+      </div>
+
+    </section>
+  `;
 }
-function searchResultsHTML(){return state.searchResults.length?state.searchResults.map(p=>userItem(p)).join(""):state.search?`<div class="empty">No users found.</div>`:`<div class="empty">Type a username to search.</div>`}
+
+
+function searchResultsHTML(){
+
+  if(state.searchResults.length){
+
+    return state.searchResults
+      .map(userItem)
+      .join("");
+  }
+
+  if(state.search){
+
+    return `
+      <div class="empty">
+        No users found.
+      </div>
+    `;
+  }
+
+  return `
+    <div class="empty">
+      Type a username to search.
+    </div>
+  `;
+}
+
+
 let searchTimer;
-function debouncedSearch(v){state.search=v;clearTimeout(searchTimer);searchTimer=setTimeout(async()=>{await searchUsers(v);$("search-results").innerHTML=searchResultsHTML()},250)}
-async function searchUsers(v){
- const q=v.replace(/^@/,"").trim().toLowerCase(); if(!q){state.searchResults=[];return}
- const {data,error}=await sb.from("profiles").select("*").ilike("username_normalized",`${q}%`).neq("id",state.user.id).limit(25);
- state.searchResults=error?[]:data||[];
+
+
+function debouncedSearch(value){
+
+  state.search = value;
+
+  clearTimeout(searchTimer);
+
+  searchTimer =
+    setTimeout(async()=>{
+
+      await searchUsers(value);
+
+      const element =
+        $("search-results");
+
+      if(element){
+
+        element.innerHTML =
+          searchResultsHTML();
+      }
+
+    },250);
 }
+
+
+async function searchUsers(value){
+
+  const query =
+    value
+      .replace(/^@/,"")
+      .trim()
+      .toLowerCase();
+
+  if(!query){
+
+    state.searchResults = [];
+
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+  await sb
+    .from("profiles")
+    .select("*")
+    .ilike(
+      "username_normalized",
+      `${query}%`
+    )
+    .neq("id",state.user.id)
+    .limit(25);
+
+
+  state.searchResults =
+    error ? [] : (data || []);
+}
+
+
+/* =========================================================
+   USER CARD
+   ========================================================= */
+
+function userItem(profile){
+
+  const friend =
+    state.friends.find(
+      x=>x.id===profile.id
+    );
+
+
+  return `
+
+    <div class="item">
+
+      ${avatar(profile)}
+
+      <div class="item-main">
+
+        <div class="item-name">
+          ${esc(
+            profile.display_name ||
+            profile.username
+          )}
+        </div>
+
+        <div class="small muted">
+
+          @${esc(profile.username)}
+
+          ·
+
+          <span
+            class="${isOnline(profile)?"online":""}"
+          >
+            ${isOnline(profile)
+              ?"online"
+              :"offline"}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="actions">
+
+        ${
+          friend
+          ?
+          `
+            <button
+              class="secondary"
+              onclick="openChatWith('${profile.id}')"
+            >
+              Message
+            </button>
+          `
+          :
+          `
+            <button
+              class="secondary"
+              onclick="sendFriend('${profile.id}')"
+            >
+              Add Friend
+            </button>
+          `
+        }
+
+
+        <button
+          class="secondary"
+          onclick="openProfile('${esc(profile.username)}')"
+        >
+          Profile
+        </button>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   FRIENDS
+   ========================================================= */
+
 function friendsPage(){
- return `<div class="grid">
-  <section class="card"><h3>Friends (${state.friends.length})</h3>${state.friends.length?`<div class="list">${state.friends.map(friendItem).join("")}</div>`:`<div class="empty">You don't have any friends yet. Search for someone to connect.</div>`}</section>
-  <section class="card"><h3>Requests (${state.requests.length})</h3>${state.requests.length?`<div class="list">${state.requests.map(requestItem).join("")}</div>`:`<div class="empty">No pending requests.</div>`}</section>
- </div>`;
+
+  return `
+
+    <div class="grid">
+
+      <section class="card">
+
+        <h3>
+          Friends (${state.friends.length})
+        </h3>
+
+        ${
+          state.friends.length
+          ?
+          `
+            <div class="list">
+              ${state.friends
+                .map(friendItem)
+                .join("")}
+            </div>
+          `
+          :
+          `
+            <div class="empty">
+              You don't have any friends yet.
+              Search for someone to connect.
+            </div>
+          `
+        }
+
+      </section>
+
+
+      <section class="card">
+
+        <h3>
+          Requests (${state.requests.length})
+        </h3>
+
+        ${
+          state.requests.length
+          ?
+          `
+            <div class="list">
+              ${state.requests
+                .map(requestItem)
+                .join("")}
+            </div>
+          `
+          :
+          `
+            <div class="empty">
+              No pending requests.
+            </div>
+          `
+        }
+
+      </section>
+
+    </div>
+  `;
 }
-function userItem(p){
- const f=state.friends.find(x=>x.id===p.id);
- return `<div class="item">${avatar(p)}<div class="item-main"><div class="item-name">${esc(p.display_name||p.username)}</div><div class="small muted">@${esc(p.username)} · <span class="${online(p)?'online':''}">${online(p)?"online":"offline"}</span></div></div><div class="actions">${f?`<button class="secondary" onclick="openChatWith('${p.id}')">Message</button>`:`<button class="secondary" onclick="sendFriend('${p.id}')">Add Friend</button>`}<button class="secondary" onclick="openProfile('${esc(p.username)}')">Profile</button></div></div>`;
+
+
+function friendItem(profile){
+
+  return `
+
+    <div class="item">
+
+      ${avatar(profile)}
+
+      <div class="item-main">
+
+        <div class="item-name">
+          ${esc(
+            profile.display_name ||
+            profile.username
+          )}
+        </div>
+
+        <div class="small muted">
+
+          @${esc(profile.username)}
+
+          ·
+
+          <span
+            class="${isOnline(profile)?"online":""}"
+          >
+            ${
+              isOnline(profile)
+              ?
+              "online"
+              :
+              (
+                profile.last_seen
+                ?
+                "last seen "+fmt(profile.last_seen)
+                :
+                "offline"
+              )
+            }
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          class="secondary"
+          onclick="openChatWith('${profile.id}')"
+        >
+          Chat
+        </button>
+
+        <button
+          class="secondary"
+          onclick="removeFriend('${profile.id}')"
+        >
+          Remove
+        </button>
+
+      </div>
+
+    </div>
+  `;
 }
-function friendItem(p){
- return `<div class="item">${avatar(p)}<div class="item-main"><div class="item-name">${esc(p.display_name||p.username)}</div><div class="small muted">@${esc(p.username)} · <span class="${online(p)?'online':''}">${online(p)?"online":(p.last_seen?"last seen "+fmt(p.last_seen):"offline")}</span></div></div><div class="actions"><button class="secondary" onclick="openChatWith('${p.id}')">Chat</button><button class="secondary" onclick="removeFriend('${p.id}')">Remove</button></div></div>`;
+
+
+/* =========================================================
+   FRIEND REQUESTS
+   ========================================================= */
+
+function requestItem(request){
+
+  const profile =
+    request.sender ||
+    request.receiver ||
+    request;
+
+
+  return `
+
+    <div class="item">
+
+      ${avatar(profile)}
+
+      <div class="item-main">
+
+        <div class="item-name">
+          @${esc(profile.username)}
+        </div>
+
+        <div class="small muted">
+          ${fmt(request.created_at)}
+        </div>
+
+      </div>
+
+
+      <div class="actions">
+
+        ${
+          request.receiver_id === state.user.id
+
+          ?
+
+          `
+            <button
+              class="secondary"
+              onclick="acceptRequest('${request.id}')"
+            >
+              Accept
+            </button>
+
+            <button
+              class="secondary"
+              onclick="rejectRequest('${request.id}')"
+            >
+              Reject
+            </button>
+          `
+
+          :
+
+          `
+            <button
+              class="secondary"
+              onclick="cancelRequest('${request.id}')"
+            >
+              Cancel
+            </button>
+          `
+        }
+
+      </div>
+
+    </div>
+  `;
 }
-function requestItem(r){
- const p=r.sender||r.receiver||r;
- return `<div class="item">${avatar(p)}<div class="item-main"><div class="item-name">@${esc(p.username)}</div><div class="small muted">${fmt(r.created_at)}</div></div><div class="actions">${r.receiver_id===state.user.id?`<button class="secondary" onclick="acceptRequest('${r.id}')">Accept</button><button class="secondary" onclick="rejectRequest('${r.id}')">Reject</button>`:`<button class="secondary" onclick="cancelRequest('${r.id}')">Cancel</button>`}</div></div>`;
-}
-function chatItem(c){
- const p=c.friend||{}; return `<button class="item" style="width:100%;background:#fff;text-align:left" onclick="openChat('${c.id}')">${avatar(p)}<div class="item-main"><div class="item-name">${esc(p.display_name||p.username)}</div><div class="small muted">${c.last_message?esc(c.last_message.message):"Start a conversation"}</div></div>${c.unread?`<span class="pill">${c.unread}</span>`:""}</button>`;
-}
-function messagesPage(){
- if(state.activeConversation) return chatWindow();
- return `<section class="card"><h3>Messages</h3>${state.chats.length?`<div class="list">${state.chats.map(chatItem).join("")}</div>`:`<div class="empty">No conversations yet. Become friends with someone to start chatting.</div>`}</section>`;
-}
-function chatWindow(){
- const p=state.activeFriend||{};
- return `<div class="chat-layout" style="margin:-24px">
-  <div class="chat-list">${state.chats.map(chatItem).join("")}</div>
-  <section class="chat-window">
-   <header class="chat-header"><button class="secondary" onclick="closeChat()">←</button>${avatar(p,"sm")}<div><b>${esc(p.display_name||p.username)}</b><div class="small muted"><span class="${online(p)?'online':''}">${online(p)?"online":(p.last_seen?"last seen "+fmt(p.last_seen):"offline")}</span></div></div></header>
-   <div id="messages" class="messages">${messagesHTML()}</div>
-   <div class="composer"><input id="message-input" maxlength="4000" placeholder="Write a message…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"><button class="send" onclick="sendMessage()">Send</button></div>
-  </section>
- </div>`;
-}
-function messagesHTML(){
- if(!state.messages.length)return `<div class="empty">No messages yet. Say hello 👋</div>`;
- return state.messages.map(m=>`<div class="bubble-row ${m.sender_id===state.user.id?'mine':''}"><div class="bubble"><div>${m.deleted_at?'<i class="muted">Message deleted</i>':esc(m.message)}</div><div class="time">${fmt(m.created_at)} ${m.sender_id===state.user.id?(m.read_at?"✓✓":"✓"):""}</div>${m.sender_id===state.user.id&&!m.deleted_at?`<button class="link small" onclick="deleteMessage('${m.id}')">Delete</button>`:""}</div></div>`).join("");
-}
-function settingsPage(){
- return `<div class="profile-page"><section class="card"><h3>Profile</h3><div class="field"><label>Display name</label><input id="set-name" maxlength="50" value="${esc(state.profile?.display_name||"")}"></div><div class="field"><label>Bio</label><textarea id="set-bio" rows="4" maxlength="160">${esc(state.profile?.bio||"")}</textarea></div><button class="primary" style="width:auto" onclick="saveProfile()">Save changes</button></section>
- <section class="card" style="margin-top:16px"><h3>Account</h3><p class="small muted">Username: @${esc(state.profile?.username)}</p><p class="small muted">Created: ${fmt(state.profile?.created_at)}</p><button class="danger" onclick="deleteAccount()">Delete account</button></section></div>`;
-}
-async function openProfile(username){
- const {data}=await sb.from("profiles").select("*").eq("username_normalized",username.toLowerCase()).single();
- if(!data)return toast("User not found.");
- $("root").innerHTML=`<div class="auth" style="align-items:start"><div class="profile-page" style="width:min(760px,100%)"><div style="margin-bottom:12px"><button class="secondary" onclick="render()">← Back</button></div><section class="card"><div class="profile-cover">${avatar(data,"lg")}<div><h2>${esc(data.display_name||data.username)}</h2><div class="muted">@${esc(data.username)}</div><div class="badge"><span class="dot ${online(data)?"on":""}"></span>${online(data)?"Online":"Offline"}</div></div><div class="profile-actions">${data.id!==state.user.id?`<button class="secondary" onclick="sendFriend('${data.id}')">Add Friend</button>`:""}</div></div><hr style="border:0;border-top:1px solid var(--line);margin:20px 0"><p>${esc(data.bio||"No bio yet.")}</p><div class="small muted">Joined ${fmt(data.created_at)}</div></section></div></div>`;
-}
+
+
+/* =========================================================
+   FRIEND REQUEST ACTIONS
+   ========================================================= */
+
 async function sendFriend(id){
- const {error}=await sb.from("friend_requests").insert({sender_id:state.user.id,receiver_id:id,status:"pending"});
- if(error)return toast(error.code==="23505"?"Request already exists or users are already connected.":error.message);
- await notify(id,"friend_request",state.user.id);toast("Friend request sent.");await refreshAll();render();
+
+  const {
+    error
+  } =
+  await sb
+    .from("friend_requests")
+    .insert({
+
+      sender_id:state.user.id,
+
+      receiver_id:id,
+
+      status:"pending"
+
+    });
+
+
+  if(error){
+
+    return toast(
+      error.code === "23505"
+      ?
+      "Request already exists or users are already connected."
+      :
+      error.message
+    );
+  }
+
+
+  await notify(
+    id,
+    "friend_request",
+    state.user.id
+  );
+
+
+  toast(
+    "Friend request sent."
+  );
+
+
+  await refreshAll();
+
+  render();
 }
-async function acceptRequest(id){const {data:r}=await sb.from("friend_requests").select("*").eq("id",id).single();if(!r)return;const {error}=await sb.from("friend_requests").update({status:"accepted",updated_at:new Date().toISOString()}).eq("id",id);if(error)return toast(error.message);await sb.from("friendships").insert([{user_id:r.sender_id,friend_id:r.receiver_id},{user_id:r.receiver_id,friend_id:r.sender_id}]);await notify(r.sender_id,"friend_accepted",state.user.id);await refreshAll();render()}
-async function rejectRequest(id){await sb.from("friend_requests").update({status:"rejected",updated_at:new Date().toISOString()}).eq("id",id);await refreshAll();render()}
-async function cancelRequest(id){await sb.from("friend_requests").update({status:"cancelled",updated_at:new Date().toISOString()}).eq("id",id);await refreshAll();render()}
-async function removeFriend(id){if(!confirm("Remove this friend?"))return;await sb.from("friendships").delete().eq("user_id",state.user.id).eq("friend_id",id);await sb.from("friendships").delete().eq("user_id",id).eq("friend_id",state.user.id);toast("Friend removed.");await refreshAll();render()}
+
+
+async function acceptRequest(id){
+
+  const {
+    data:request
+  } =
+  await sb
+    .from("friend_requests")
+    .select("*")
+    .eq("id",id)
+    .single();
+
+
+  if(!request) return;
+
+
+  const {
+    error
+  } =
+  await sb
+    .from("friend_requests")
+    .update({
+
+      status:"accepted",
+
+      updated_at:
+        new Date().toISOString()
+
+    })
+    .eq("id",id);
+
+
+  if(error){
+
+    return toast(
+      error.message
+    );
+  }
+
+
+  await sb
+    .from("friendships")
+    .insert([
+
+      {
+        user_id:request.sender_id,
+        friend_id:request.receiver_id
+      },
+
+      {
+        user_id:request.receiver_id,
+        friend_id:request.sender_id
+      }
+
+    ]);
+
+
+  await notify(
+    request.sender_id,
+    "friend_accepted",
+    state.user.id
+  );
+
+
+  await refreshAll();
+
+  render();
+}
+
+
+async function rejectRequest(id){
+
+  await sb
+    .from("friend_requests")
+    .update({
+
+      status:"rejected",
+
+      updated_at:
+        new Date().toISOString()
+
+    })
+    .eq("id",id);
+
+
+  await refreshAll();
+
+  render();
+}
+
+
+async function cancelRequest(id){
+
+  await sb
+    .from("friend_requests")
+    .update({
+
+      status:"cancelled",
+
+      updated_at:
+        new Date().toISOString()
+
+    })
+    .eq("id",id);
+
+
+  await refreshAll();
+
+  render();
+}
+
+
+async function removeFriend(id){
+
+  if(
+    !confirm("Remove this friend?")
+  ){
+    return;
+  }
+
+
+  await sb
+    .from("friendships")
+    .delete()
+    .eq("user_id",state.user.id)
+    .eq("friend_id",id);
+
+
+  await sb
+    .from("friendships")
+    .delete()
+    .eq("user_id",id)
+    .eq("friend_id",state.user.id);
+
+
+  toast(
+    "Friend removed."
+  );
+
+
+  await refreshAll();
+
+  render();
+}
+
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
+
+function messagesPage(){
+
+  if(state.activeConversation){
+
+    return chatWindow();
+  }
+
+
+  return `
+
+    <section class="card">
+
+      <h3>
+        Messages
+      </h3>
+
+      ${
+        state.chats.length
+
+        ?
+
+        `
+          <div class="list">
+            ${state.chats
+              .map(chatItem)
+              .join("")}
+          </div>
+        `
+
+        :
+
+        `
+          <div class="empty">
+            No conversations yet.
+            Become friends with someone to start chatting.
+          </div>
+        `
+      }
+
+    </section>
+  `;
+}
+
+
+function chatItem(conversation){
+
+  const friend =
+    conversation.friend || {};
+
+
+  return `
+
+    <button
+      class="item"
+      style="
+        width:100%;
+        background:#fff;
+        text-align:left
+      "
+      onclick="openChat('${conversation.id}')"
+    >
+
+      ${avatar(friend)}
+
+      <div class="item-main">
+
+        <div class="item-name">
+          ${esc(
+            friend.display_name ||
+            friend.username
+          )}
+        </div>
+
+        <div class="small muted">
+
+          ${
+            conversation.last_message
+            ?
+            esc(
+              conversation.last_message.message
+            )
+            :
+            "Start a conversation"
+          }
+
+        </div>
+
+      </div>
+
+
+      ${
+        conversation.unread
+        ?
+        `
+          <span class="pill">
+            ${conversation.unread}
+          </span>
+        `
+        :
+        ""
+      }
+
+    </button>
+  `;
+}
+
+
+/* =========================================================
+   CREATE / FIND CONVERSATION
+   ========================================================= */
+
 async function ensureConversation(friendId){
- let {data:existing}=await sb.from("conversation_members").select("conversation_id").eq("user_id",state.user.id);
- const ids=(existing||[]).map(x=>x.conversation_id);
- if(ids.length){const {data:members}=await sb.from("conversation_members").select("conversation_id").in("conversation_id",ids).eq("user_id",friendId);if(members?.length)return members[0].conversation_id}
- const {data:c,error}=await sb.from("conversations").insert({}).select().single();if(error)throw error;
- const {error:e}=await sb.from("conversation_members").insert([{conversation_id:c.id,user_id:state.user.id},{conversation_id:c.id,user_id:friendId}]);if(e)throw e;return c.id;
+
+  const {
+    data:existing
+  } =
+  await sb
+    .from("conversation_members")
+    .select("conversation_id")
+    .eq("user_id",state.user.id);
+
+
+  const ids =
+    (existing || [])
+      .map(x=>x.conversation_id);
+
+
+  if(ids.length){
+
+    const {
+      data:members
+    } =
+    await sb
+      .from("conversation_members")
+      .select("conversation_id,user_id")
+      .in("conversation_id",ids)
+      .eq("user_id",friendId);
+
+
+    if(members?.length){
+
+      return members[0].conversation_id;
+    }
+  }
+
+
+  const {
+    data:conversation,
+    error
+  } =
+  await sb
+    .from("conversations")
+    .insert({})
+    .select()
+    .single();
+
+
+  if(error){
+
+    throw error;
+  }
+
+
+  const {
+    error:memberError
+  } =
+  await sb
+    .from("conversation_members")
+    .insert([
+
+      {
+        conversation_id:conversation.id,
+        user_id:state.user.id
+      },
+
+      {
+        conversation_id:conversation.id,
+        user_id:friendId
+      }
+
+    ]);
+
+
+  if(memberError){
+
+    throw memberError;
+  }
+
+
+  return conversation.id;
 }
-async function openChatWith(id){const cid=await ensureConversation(id);await refreshChats();await openChat(cid)}
-async function openChat(cid){
- const c=state.chats.find(x=>x.id===cid); if(!c)return;
- state.activeConversation=cid;state.activeFriend=c.friend;state.page="messages";
- const {data,error}=await sb.from("messages").select("*").eq("conversation_id",cid).order("created_at",{ascending:true}).limit(100);
- if(error)return toast(error.message);state.messages=data||[];
- await sb.from("messages").update({read_at:new Date().toISOString()}).eq("conversation_id",cid).neq("sender_id",state.user.id).is("read_at",null);
- subscribeChat();render();setTimeout(scrollMessages,50);
+
+
+async function openChatWith(id){
+
+  try{
+
+    const conversationId =
+      await ensureConversation(id);
+
+    await refreshChats();
+
+    await openChat(
+      conversationId
+    );
+
+  }catch(error){
+
+    toast(
+      error.message
+    );
+  }
 }
-function closeChat(){unsubscribeChat();state.activeConversation=null;state.activeFriend=null;state.messages=[];render()}
+
+
+/* =========================================================
+   OPEN CHAT
+   ========================================================= */
+
+async function openChat(id){
+
+  const conversation =
+    state.chats.find(
+      x=>x.id===id
+    );
+
+
+  if(!conversation){
+
+    return;
+  }
+
+
+  state.activeConversation =
+    id;
+
+  state.activeFriend =
+    conversation.friend;
+
+  state.page =
+    "messages";
+
+
+  const {
+    data,
+    error
+  } =
+  await sb
+    .from("messages")
+    .select("*")
+    .eq("conversation_id",id)
+    .order("created_at",{
+      ascending:true
+    })
+    .limit(100);
+
+
+  if(error){
+
+    return toast(
+      error.message
+    );
+  }
+
+
+  state.messages =
+    data || [];
+
+
+  await sb
+    .from("messages")
+    .update({
+      read_at:new Date().toISOString()
+    })
+    .eq("conversation_id",id)
+    .neq("sender_id",state.user.id)
+    .is("read_at",null);
+
+
+  subscribeChat();
+
+  render();
+
+  setTimeout(
+    scrollMessages,
+    50
+  );
+}
+
+
+/* =========================================================
+   CHAT WINDOW
+   ========================================================= */
+
+function chatWindow(){
+
+  const friend =
+    state.activeFriend || {};
+
+
+  return `
+
+    <div
+      class="chat-layout"
+      style="margin:-24px"
+    >
+
+      <div class="chat-list">
+
+        ${state.chats
+          .map(chatItem)
+          .join("")}
+
+      </div>
+
+
+      <section class="chat-window">
+
+        <header class="chat-header">
+
+          <button
+            class="secondary"
+            onclick="closeChat()"
+          >
+            ←
+          </button>
+
+          ${avatar(friend,"sm")}
+
+          <div>
+
+            <b>
+              ${esc(
+                friend.display_name ||
+                friend.username
+              )}
+            </b>
+
+            <div class="small muted">
+
+              <span
+                class="${isOnline(friend)?"online":""}"
+              >
+
+                ${
+                  isOnline(friend)
+                  ?
+                  "online"
+                  :
+                  (
+                    friend.last_seen
+                    ?
+                    "last seen "+fmt(friend.last_seen)
+                    :
+                    "offline"
+                  )
+                }
+
+              </span>
+
+            </div>
+
+          </div>
+
+        </header>
+
+
+        <div
+          id="messages"
+          class="messages"
+        >
+
+          ${messagesHTML()}
+
+        </div>
+
+
+        <div class="composer">
+
+          <input
+            id="message-input"
+            maxlength="4000"
+            placeholder="Write a message…"
+            onkeydown="
+              if(event.key==='Enter'&&!event.shiftKey){
+                event.preventDefault();
+                sendMessage()
+              }
+            "
+          >
+
+          <button
+            class="send"
+            onclick="sendMessage()"
+          >
+            Send
+          </button>
+
+        </div>
+
+      </section>
+
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   MESSAGE HTML
+   ========================================================= */
+
+function messagesHTML(){
+
+  if(!state.messages.length){
+
+    return `
+      <div class="empty">
+        No messages yet. Say hello 👋
+      </div>
+    `;
+  }
+
+
+  return state.messages
+    .map(message=>`
+
+      <div
+        class="bubble-row ${
+          message.sender_id===state.user.id
+          ?
+          "mine"
+          :
+          ""
+        }"
+      >
+
+        <div class="bubble">
+
+          <div>
+
+            ${
+              message.deleted_at
+
+              ?
+
+              `<i class="muted">
+                Message deleted
+              </i>`
+
+              :
+
+              esc(message.message)
+            }
+
+          </div>
+
+
+          <div class="time">
+
+            ${fmt(message.created_at)}
+
+            ${
+              message.sender_id===state.user.id
+
+              ?
+
+              (
+                message.read_at
+                ?
+                " ✓✓"
+                :
+                " ✓"
+              )
+
+              :
+              ""
+            }
+
+          </div>
+
+
+          ${
+            message.sender_id===state.user.id &&
+            !message.deleted_at
+
+            ?
+
+            `
+              <button
+                class="link small"
+                onclick="deleteMessage('${message.id}')"
+              >
+                Delete
+              </button>
+            `
+
+            :
+
+            ""
+          }
+
+        </div>
+
+      </div>
+
+    `)
+    .join("");
+}
+
+
+/* =========================================================
+   REALTIME CHAT
+   ========================================================= */
+
 function subscribeChat(){
- unsubscribeChat(); if(!state.activeConversation)return;
- state.channel=sb.channel("messages-"+state.activeConversation).on("postgres_changes",{event:"*",schema:"public",table:"messages",filter:`conversation_id=eq.${state.activeConversation}`},payload=>{
-   if(payload.eventType==="INSERT" && !state.messages.some(x=>x.id===payload.new.id)) state.messages.push(payload.new);
-   if(payload.eventType==="UPDATE"){const i=state.messages.findIndex(x=>x.id===payload.new.id);if(i>=0)state.messages[i]=payload.new}
-   if(payload.eventType==="DELETE")state.messages=state.messages.filter(x=>x.id!==payload.old.id);
-   if(state.page==="messages"&&state.activeConversation){$("messages").innerHTML=messagesHTML();scrollMessages()}
- }).subscribe();
+
+  unsubscribeChat();
+
+  if(!state.activeConversation){
+
+    return;
+  }
+
+
+  state.channel =
+    sb
+      .channel(
+        "messages-"+state.activeConversation
+      )
+      .on(
+        "postgres_changes",
+        {
+          event:"*",
+          schema:"public",
+          table:"messages",
+          filter:
+            `conversation_id=eq.${state.activeConversation}`
+        },
+        payload=>{
+
+          if(
+            payload.eventType==="INSERT" &&
+            !state.messages.some(
+              x=>x.id===payload.new.id
+            )
+          ){
+
+            state.messages.push(
+              payload.new
+            );
+          }
+
+
+          if(
+            payload.eventType==="UPDATE"
+          ){
+
+            const index =
+              state.messages.findIndex(
+                x=>x.id===payload.new.id
+              );
+
+            if(index >= 0){
+
+              state.messages[index] =
+                payload.new;
+            }
+          }
+
+
+          if(
+            payload.eventType==="DELETE"
+          ){
+
+            state.messages =
+              state.messages.filter(
+                x=>x.id!==payload.old.id
+              );
+          }
+
+
+          if(
+            state.page==="messages" &&
+            state.activeConversation
+          ){
+
+            const element =
+              $("messages");
+
+            if(element){
+
+              element.innerHTML =
+                messagesHTML();
+
+              scrollMessages();
+            }
+          }
+
+        }
+      )
+      .subscribe();
 }
-function unsubscribeChat(){if(state.channel){sb.removeChannel(state.channel);state.channel=null}}
-function scrollMessages(){const m=$("messages");if(m)m.scrollTop=m.scrollHeight}
+
+
+function unsubscribeChat(){
+
+  if(state.channel){
+
+    sb.removeChannel(
+      state.channel
+    );
+
+    state.channel = null;
+  }
+}
+
+
+function scrollMessages(){
+
+  const element =
+    $("messages");
+
+  if(element){
+
+    element.scrollTop =
+      element.scrollHeight;
+  }
+}
+
+
+/* =========================================================
+   SEND MESSAGE
+   ========================================================= */
+
 async function sendMessage(){
- const input=$("message-input");const text=input?.value.trim();if(!text||!state.activeConversation)return;
- input.value="";const {error}=await sb.from("messages").insert({conversation_id:state.activeConversation,sender_id:state.user.id,message:text});
- if(error){input.value=text;return toast(error.message)}
- await refreshChats();scrollMessages();
+
+  const input =
+    $("message-input");
+
+  const text =
+    input?.value.trim();
+
+
+  if(
+    !text ||
+    !state.activeConversation
+  ){
+
+    return;
+  }
+
+
+  input.value = "";
+
+
+  const {
+    error
+  } =
+  await sb
+    .from("messages")
+    .insert({
+
+      conversation_id:
+        state.activeConversation,
+
+      sender_id:
+        state.user.id,
+
+      message:text
+
+    });
+
+
+  if(error){
+
+    input.value = text;
+
+    return toast(
+      error.message
+    );
+  }
+
+
+  await refreshChats();
+
+  scrollMessages();
 }
-async function deleteMessage(id){await sb.from("messages").update({deleted_at:new Date().toISOString(),message:""}).eq("id",id).eq("sender_id",state.user.id)}
+
+
+/* =========================================================
+   DELETE MESSAGE
+   ========================================================= */
+
+async function deleteMessage(id){
+
+  const {
+    error
+  } =
+  await sb
+    .from("messages")
+    .update({
+
+      deleted_at:
+        new Date().toISOString(),
+
+      message:""
+
+    })
+    .eq("id",id)
+    .eq("sender_id",state.user.id);
+
+
+  if(error){
+
+    toast(
+      error.message
+    );
+  }
+}
+
+
+/* =========================================================
+   CLOSE CHAT
+   ========================================================= */
+
+function closeChat(){
+
+  unsubscribeChat();
+
+  state.activeConversation =
+    null;
+
+  state.activeFriend =
+    null;
+
+  state.messages =
+    [];
+
+  render();
+}
+
+
+/* =========================================================
+   PUBLIC PROFILE
+   ========================================================= */
+
+async function openProfile(username){
+
+  const {
+    data,
+    error
+  } =
+  await sb
+    .from("profiles")
+    .select("*")
+    .eq(
+      "username_normalized",
+      username.toLowerCase()
+    )
+    .single();
+
+
+  if(error || !data){
+
+    return toast(
+      "User not found."
+    );
+  }
+
+
+  $("root").innerHTML = `
+
+    <div
+      class="auth"
+      style="align-items:start"
+    >
+
+      <div
+        class="profile-page"
+        style="width:min(760px,100%)"
+      >
+
+        <div style="margin-bottom:12px">
+
+          <button
+            class="secondary"
+            onclick="render()"
+          >
+            ← Back
+          </button>
+
+        </div>
+
+
+        <section class="card">
+
+          <div class="profile-cover">
+
+            ${avatar(data,"lg")}
+
+            <div>
+
+              <h2>
+                ${esc(
+                  data.display_name ||
+                  data.username
+                )}
+              </h2>
+
+              <div class="muted">
+                @${esc(data.username)}
+              </div>
+
+              <div class="badge">
+
+                <span
+                  class="dot ${
+                    isOnline(data)
+                    ?
+                    "on"
+                    :
+                    ""
+                  }"
+                ></span>
+
+                ${
+                  isOnline(data)
+                  ?
+                  "Online"
+                  :
+                  "Offline"
+                }
+
+              </div>
+
+            </div>
+
+
+            ${
+              data.id!==state.user.id
+
+              ?
+
+              `
+                <div class="profile-actions">
+
+                  <button
+                    class="secondary"
+                    onclick="sendFriend('${data.id}')"
+                  >
+                    Add Friend
+                  </button>
+
+                </div>
+              `
+
+              :
+
+              ""
+            }
+
+          </div>
+
+
+          <hr
+            style="
+              border:0;
+              border-top:1px solid var(--line);
+              margin:20px 0
+            "
+          >
+
+
+          <p>
+            ${esc(
+              data.bio ||
+              "No bio yet."
+            )}
+          </p>
+
+
+          <div class="small muted">
+
+            Joined
+            ${fmt(data.created_at)}
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+function settingsPage(){
+
+  return `
+
+    <div class="profile-page">
+
+      <section class="card">
+
+        <h3>
+          Profile
+        </h3>
+
+
+        <div class="field">
+
+          <label>
+            Display name
+          </label>
+
+          <input
+            id="set-name"
+            maxlength="50"
+            value="${esc(
+              state.profile?.display_name || ""
+            )}"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Bio
+          </label>
+
+          <textarea
+            id="set-bio"
+            rows="4"
+            maxlength="160"
+          >${esc(
+            state.profile?.bio || ""
+          )}</textarea>
+
+        </div>
+
+
+        <button
+          class="primary"
+          style="width:auto"
+          onclick="saveProfile()"
+        >
+          Save changes
+        </button>
+
+      </section>
+
+
+      <section
+        class="card"
+        style="margin-top:16px"
+      >
+
+        <h3>
+          Account
+        </h3>
+
+        <p class="small muted">
+          Username:
+          @${esc(state.profile?.username)}
+        </p>
+
+        <p class="small muted">
+          Created:
+          ${fmt(state.profile?.created_at)}
+        </p>
+
+        <button
+          class="danger"
+          onclick="deleteAccount()"
+        >
+          Delete account
+        </button>
+
+      </section>
+
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   SAVE PROFILE
+   ========================================================= */
+
 async function saveProfile(){
- const {error}=await sb.from("profiles").update({display_name:$("set-name").value.trim()||state.profile.username,bio:$("set-bio").value.trim()}).eq("id",state.user.id);
- if(error)return toast(error.message);await loadProfile();toast("Profile updated.");render();
+
+  const {
+    error
+  } =
+  await sb
+    .from("profiles")
+    .update({
+
+      display_name:
+        $("set-name").value.trim() ||
+        state.profile.username,
+
+      bio:
+        $("set-bio").value.trim()
+
+    })
+    .eq(
+      "id",
+      state.user.id
+    );
+
+
+  if(error){
+
+    return toast(
+      error.message
+    );
+  }
+
+
+  await loadProfile();
+
+  toast(
+    "Profile updated."
+  );
+
+  render();
 }
+
+
+/* =========================================================
+   ACCOUNT DELETION
+   ========================================================= */
+
 async function deleteAccount(){
- if(!confirm("Delete your account permanently? This cannot be undone."))return;
- const {error}=await sb.rpc("delete_my_account");if(error)return toast(error.message);
- await sb.auth.signOut();state.user=null;state.profile=null;render();
+
+  if(
+    !confirm(
+      "Delete your account permanently? This cannot be undone."
+    )
+  ){
+
+    return;
+  }
+
+
+  const {
+    error
+  } =
+  await sb.rpc(
+    "delete_my_account"
+  );
+
+
+  if(error){
+
+    return toast(
+      error.message
+    );
+  }
+
+
+  await sb.auth.signOut();
+
+  state.user = null;
+  state.profile = null;
+
+  render();
 }
-async function notify(userId,type,actorId,relatedId=null){await sb.from("notifications").insert({user_id:userId,type,actor_id:actorId,related_id:relatedId})}
+
+
+/* =========================================================
+   NOTIFICATIONS
+   ========================================================= */
+
+async function notify(
+  userId,
+  type,
+  actorId,
+  relatedId=null
+){
+
+  await sb
+    .from("notifications")
+    .insert({
+
+      user_id:userId,
+
+      type,
+
+      actor_id:actorId,
+
+      related_id:relatedId
+
+    });
+}
+
+
+/* =========================================================
+   PROFILE / SESSION
+   ========================================================= */
+
+async function loadProfile(){
+
+  const {
+    data,
+    error
+  } =
+  await sb
+    .from("profiles")
+    .select("*")
+    .eq(
+      "id",
+      state.user.id
+    )
+    .single();
+
+
+  if(error){
+
+    console.error(
+      error
+    );
+
+    return;
+  }
+
+
+  state.profile =
+    data;
+}
+
 
 async function loadSession(){
- const {data}=await sb.auth.getSession();state.user=data.session?.user||null;
- if(state.user){await loadProfile();await refreshAll();}
- render();
+
+  const {
+    data
+  } =
+  await sb.auth.getSession();
+
+
+  state.user =
+    data.session?.user || null;
+
+
+  if(state.user){
+
+    await loadProfile();
+
+    await refreshAll();
+
+  }
+
+
+  render();
 }
-async function loadProfile(){const {data}=await sb.from("profiles").select("*").eq("id",state.user.id).single();state.profile=data}
-async function refreshAll(){await Promise.all([refreshFriends(),refreshRequests(),refreshChats()]);}
+
+
+/* =========================================================
+   FRIENDS DATA
+   ========================================================= */
+
 async function refreshFriends(){
- const {data}=await sb.from("friendships").select("friend_id,profiles:friend_id(*)").eq("user_id",state.user.id);
- state.friends=(data||[]).map(x=>x.profiles).filter(Boolean);
+
+  const {
+    data,
+    error
+  } =
+  await sb
+    .from("friendships")
+    .select(
+      "friend_id,profiles:friend_id(*)"
+    )
+    .eq(
+      "user_id",
+      state.user.id
+    );
+
+
+  if(error){
+
+    state.friends = [];
+
+    return;
+  }
+
+
+  state.friends =
+    (data || [])
+      .map(x=>x.profiles)
+      .filter(Boolean);
 }
+
+
+/* =========================================================
+   REQUEST DATA
+   ========================================================= */
+
 async function refreshRequests(){
- const {data}=await sb.from("friend_requests").select("*,sender:sender_id(*),receiver:receiver_id(*)").eq("status","pending").or(`sender_id.eq.${state.user.id},receiver_id.eq.${state.user.id}`).order("created_at",{ascending:false});
- state.requests=data||[];
+
+  const {
+    data,
+    error
+  } =
+  await sb
+    .from("friend_requests")
+    .select(
+      "*,sender:sender_id(*),receiver:receiver_id(*)"
+    )
+    .eq(
+      "status",
+      "pending"
+    )
+    .or(
+      `sender_id.eq.${state.user.id},receiver_id.eq.${state.user.id}`
+    )
+    .order(
+      "created_at",
+      {ascending:false}
+    );
+
+
+  if(error){
+
+    state.requests = [];
+
+    return;
+  }
+
+
+  state.requests =
+    data || [];
 }
+
+
+/* =========================================================
+   CHAT DATA
+   ========================================================= */
+
 async function refreshChats(){
- const {data:mem}=await sb.from("conversation_members").select("conversation_id,user_id").eq("user_id",state.user.id);const ids=(mem||[]).map(x=>x.conversation_id);if(!ids.length){state.chats=[];return}
- const {data:all}=await sb.from("conversation_members").select("conversation_id,user_id,profiles:user_id(*)").in("conversation_id",ids).neq("user_id",state.user.id);
- const result=[];
- for(const x of (all||[])){
-   const {data:msgs}=await sb.from("messages").select("message,created_at,sender_id,read_at").eq("conversation_id",x.conversation_id).order("created_at",{ascending:false}).limit(1);
-   const {count}=await sb.from("messages").select("id",{count:"exact",head:true}).eq("conversation_id",x.conversation_id).neq("sender_id",state.user.id).is("read_at",null);
-   result.push({id:x.conversation_id,friend:x.profiles,last_message:msgs?.[0],unread:count||0});
- }
- state.chats=result;
+
+  const {
+    data:members
+  } =
+  await sb
+    .from("conversation_members")
+    .select(
+      "conversation_id,user_id"
+    )
+    .eq(
+      "user_id",
+      state.user.id
+    );
+
+
+  const ids =
+    (members || [])
+      .map(x=>x.conversation_id);
+
+
+  if(!ids.length){
+
+    state.chats = [];
+
+    return;
+  }
+
+
+  const {
+    data:otherMembers
+  } =
+  await sb
+    .from("conversation_members")
+    .select(
+      "conversation_id,user_id,profiles:user_id(*)"
+    )
+    .in(
+      "conversation_id",
+      ids
+    )
+    .neq(
+      "user_id",
+      state.user.id
+    );
+
+
+  const result = [];
+
+
+  for(
+    const member of
+    (otherMembers || [])
+  ){
+
+    const {
+      data:messages
+    } =
+    await sb
+      .from("messages")
+      .select(
+        "message,created_at,sender_id,read_at"
+      )
+      .eq(
+        "conversation_id",
+        member.conversation_id
+      )
+      .order(
+        "created_at",
+        {ascending:false}
+      )
+      .limit(1);
+
+
+    const {
+      count
+    } =
+    await sb
+      .from("messages")
+      .select(
+        "id",
+        {
+          count:"exact",
+          head:true
+        }
+      )
+      .eq(
+        "conversation_id",
+        member.conversation_id
+      )
+      .neq(
+        "sender_id",
+        state.user.id
+      )
+      .is(
+        "read_at",
+        null
+      );
+
+
+    result.push({
+
+      id:
+        member.conversation_id,
+
+      friend:
+        member.profiles,
+
+      last_message:
+        messages?.[0],
+
+      unread:
+        count || 0
+
+    });
+  }
+
+
+  state.chats =
+    result;
 }
-function go(p){state.page=p;if(p!=="messages"){unsubscribeChat();state.activeConversation=null;state.activeFriend=null}render()}
-function afterRender(){if(state.page==="search"){searchUsers(state.search).then(()=>{const el=$("search-results");if(el)el.innerHTML=searchResultsHTML()})}if(state.page==="messages"&&state.activeConversation){setTimeout(scrollMessages,30)}}
-sb?.auth.onAuthStateChange(async(_event,session)=>{state.user=session?.user||null;if(state.user){await loadProfile();await refreshAll()}render()});
-if(sb) loadSession();
+
+
+/* =========================================================
+   REFRESH EVERYTHING
+   ========================================================= */
+
+async function refreshAll(){
+
+  await Promise.all([
+
+    refreshFriends(),
+
+    refreshRequests(),
+
+    refreshChats()
+
+  ]);
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function go(page){
+
+  state.page =
+    page;
+
+
+  if(page !== "messages"){
+
+    unsubscribeChat();
+
+    state.activeConversation =
+      null;
+
+    state.activeFriend =
+      null;
+
+  }
+
+
+  render();
+}
+
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+
+function render(){
+
+  if(!state.user){
+
+    $("root").innerHTML =
+      authScreen();
+
+    afterRender();
+
+    return;
+  }
+
+
+  $("root").innerHTML =
+    appScreen();
+
+  afterRender();
+}
+
+
+/* =========================================================
+   AFTER RENDER
+   ========================================================= */
+
+function afterRender(){
+
+  /* FIX:
+     Initialize login/register form
+     after the authentication screen
+     has been inserted into the DOM.
+  */
+
+  if(!state.user){
+
+    const box =
+      $("auth-box");
+
+    if(box){
+
+      authBox();
+
+    }
+
+    return;
+  }
+
+
+  if(state.page === "search"){
+
+    searchUsers(
+      state.search
+    ).then(()=>{
+
+      const element =
+        $("search-results");
+
+      if(element){
+
+        element.innerHTML =
+          searchResultsHTML();
+      }
+
+    });
+
+  }
+
+
+  if(
+    state.page === "messages" &&
+    state.activeConversation
+  ){
+
+    setTimeout(
+      scrollMessages,
+      30
+    );
+  }
+}
+
+
+/* =========================================================
+   AUTH STATE LISTENER
+   ========================================================= */
+
+sb.auth.onAuthStateChange(
+  async(event,session)=>{
+
+    state.user =
+      session?.user || null;
+
+
+    if(state.user){
+
+      await loadProfile();
+
+      await refreshAll();
+
+    }
+
+
+    render();
+
+  }
+);
+
+
+/* =========================================================
+   START APPLICATION
+   ========================================================= */
+
+loadSession();
+
 </script>
+
 </body>
 </html>
