@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>We'll Be Back Soon</title>
+<style>
+  :root{
+    --ink:#0a0f1e;
+    --ink2:#0f1830;
+    --crimson:#e0273f;
+    --crimson-dk:#a3182a;
+    --blue:#2f6bff;
+    --web:rgba(255,255,255,0.08);
+    --paper:#f4f1ea;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; height:100%;
+    background:radial-gradient(ellipse at 20% 0%, var(--ink2), var(--ink) 70%);
+    font-family: 'Courier New', ui-monospace, monospace;
+    overflow:hidden;
+  }
+  .sky{
+    position:relative; width:100%; height:100vh;
+  }
+
+  /* web lines radiating from top-left corner */
+  .webline{
+    position:absolute; top:0; left:0;
+    height:2px; width:170vmax;
+    background:var(--web);
+    transform-origin:0 0;
+  }
+
+  /* concentric web arcs */
+  .arc{
+    position:absolute; top:-40vmax; left:-40vmax;
+    width:80vmax; height:80vmax;
+    border:1.5px solid var(--web);
+    border-radius:50%;
+  }
+
+  .rig{
+    position:absolute; top:0; left:12%;
+    transform-origin:top center;
+    animation: swing 3.4s ease-in-out infinite;
+  }
+  @keyframes swing{
+    0%,100%{ transform:rotate(24deg); }
+    50%{ transform:rotate(-18deg); }
+  }
+
+  .thread{
+    width:1.5px; height:32vh;
+    background:linear-gradient(var(--web), rgba(255,255,255,0.35));
+    margin:0 auto;
+  }
+
+  .hero{
+    width:88px; margin:-4px auto 0;
+    animation: bob 3.4s ease-in-out infinite;
+  }
+  @keyframes bob{
+    0%,100%{ transform:rotate(0deg); }
+    50%{ transform:rotate(6deg); }
+  }
+
+  .head{
+    width:52px; height:60px; margin:0 auto;
+    background:var(--crimson);
+    border-radius:50% 50% 46% 46%;
+    position:relative;
+    box-shadow: inset 0 -10px 14px rgba(0,0,0,0.25);
+  }
+  .head::before, .head::after{
+    content:"";
+    position:absolute; top:22px;
+    width:20px; height:12px;
+    background:var(--ink);
+    border-radius:60% 60% 40% 40% / 70% 70% 30% 30%;
+  }
+  .head::before{ left:4px; transform:rotate(-8deg);}
+  .head::after{ right:4px; transform:rotate(8deg);}
+  .web-mask{
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(45deg, transparent 0 6px, rgba(0,0,0,0.18) 6px 7px),
+      repeating-linear-gradient(-45deg, transparent 0 6px, rgba(0,0,0,0.18) 6px 7px);
+    border-radius:50% 50% 46% 46%;
+    mix-blend-mode:multiply;
+  }
+
+  .torso{
+    width:60px; height:70px; margin:-4px auto 0;
+    background:linear-gradient(180deg, var(--crimson), var(--crimson-dk));
+    border-radius:30% 30% 40% 40%;
+    position:relative;
+  }
+  .chest-emblem{
+    position:absolute; top:14px; left:50%; transform:translateX(-50%);
+    width:16px; height:16px;
+    border:2px solid var(--ink);
+    border-radius:50%;
+  }
+  .chest-emblem::before, .chest-emblem::after{
+    content:""; position:absolute; background:var(--ink);
+  }
+  .chest-emblem::before{ top:-6px; left:6px; width:2px; height:10px; transform:rotate(20deg);}
+  .chest-emblem::after{ top:-6px; left:6px; width:2px; height:10px; transform:rotate(-20deg);}
+
+  .arm{
+    position:absolute; top:8px;
+    width:14px; height:44px;
+    background:var(--blue);
+    border-radius:8px;
+  }
+  .arm.left{ left:-10px; transform:rotate(-40deg); transform-origin:top center; }
+  .arm.right{ right:-10px; transform:rotate(70deg); transform-origin:top center;
+    animation: wave 3.4s ease-in-out infinite;
+  }
+  @keyframes wave{
+    0%,100%{ transform:rotate(70deg); }
+    50%{ transform:rotate(30deg); }
+  }
+
+  .leg{
+    position:absolute; bottom:-38px;
+    width:16px; height:42px;
+    background:var(--blue);
+    border-radius:8px;
+  }
+  .leg.left{ left:8px; transform:rotate(-10deg);}
+  .leg.right{ right:8px; transform:rotate(14deg);}
+
+  .msg{
+    position:absolute; bottom:9%; width:100%;
+    text-align:center; color:var(--paper);
+  }
+  .eyebrow{
+    letter-spacing:0.35em; font-size:11px; color:var(--blue);
+    text-transform:uppercase;
+  }
+  h1{
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight:700; font-style:italic;
+    font-size:clamp(28px, 6vw, 52px);
+    margin:10px 0 6px;
+    color:var(--paper);
+    text-shadow:0 0 24px rgba(224,39,63,0.35);
+  }
+  p.sub{
+    font-size:13px; color:rgba(244,241,234,0.6);
+    max-width:420px; margin:0 auto;
+    line-height:1.6;
+  }
+  .status{
+    display:inline-flex; align-items:center; gap:8px;
+    margin-top:18px; padding:6px 14px;
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:999px; font-size:11px;
+    color:rgba(244,241,234,0.7); letter-spacing:0.08em;
+  }
+  .dot{
+    width:7px; height:7px; border-radius:50%;
+    background:var(--crimson);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:0.4; transform:scale(0.7); }
+  }
+</style>
+</head>
+<body>
+  <div class="sky">
+    <div class="arc" style="width:40vmax;height:40vmax;top:-20vmax;left:-20vmax;"></div>
+    <div class="arc"></div>
+    <div class="arc" style="width:120vmax;height:120vmax;top:-60vmax;left:-60vmax;"></div>
+    <div class="webline" style="transform:rotate(8deg)"></div>
+    <div class="webline" style="transform:rotate(24deg)"></div>
+    <div class="webline" style="transform:rotate(40deg)"></div>
+    <div class="webline" style="transform:rotate(56deg)"></div>
+    <div class="webline" style="transform:rotate(72deg)"></div>
+
+    <div class="rig">
+      <div class="thread"></div>
+      <div class="hero">
+        <div class="head"><div class="web-mask"></div></div>
+        <div class="torso">
+          <div class="chest-emblem"></div>
+          <div class="arm left"></div>
+          <div class="arm right"></div>
+          <div class="leg left"></div>
+          <div class="leg right"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg">
+      <div class="eyebrow">Web Status</div>
+      <h1>We'll be back soon</h1>
+      <p class="sub">Our friendly neighborhood hero is swinging by to fix a few things. Hang tight — normal service resumes shortly.</p>
+      <div class="status"><span class="dot"></span> MAINTENANCE IN PROGRESS</div>
+    </div>
+  </div>
+</body>
+</html>
