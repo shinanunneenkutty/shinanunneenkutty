@@ -1,0 +1,2348 @@
+:root {
+
+  --bg: #05060a;
+  --bg2: #090b12;
+
+  --text: #f2f5ff;
+  --muted: #8e94a8;
+
+  --line: rgba(255,255,255,.12);
+  --glass: rgba(255,255,255,.055);
+
+  --cyan: #8ff8ff;
+  --violet: #9f8cff;
+
+  --ease: cubic-bezier(.2,.8,.2,1);
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+body {
+
+  margin: 0;
+
+  background: var(--bg);
+
+  color: var(--text);
+
+  font-family:
+    "Space Grotesk",
+    system-ui,
+    sans-serif;
+
+  overflow-x: hidden;
+
+}
+
+body.magic-active {
+  overflow: hidden;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* =========================================================
+   GENERAL
+========================================================= */
+
+.section {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+}
+
+.section-pad {
+  padding: 15vh 7vw;
+}
+
+.section-kicker {
+
+  font:
+    500 10px/1
+    "Space Grotesk",
+    sans-serif;
+
+  letter-spacing: .28em;
+
+  color:
+    rgba(255,255,255,.42);
+
+  text-transform: uppercase;
+
+}
+
+.eyebrow {
+
+  font:
+    500 11px/1.2
+    "Space Grotesk",
+    sans-serif;
+
+  letter-spacing: .22em;
+
+  text-transform: uppercase;
+
+  color: var(--cyan);
+
+}
+
+
+/* =========================================================
+   NOISE
+========================================================= */
+
+.noise {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  pointer-events: none;
+
+  opacity: .035;
+
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+}
+
+
+/* =========================================================
+   AMBIENT LIGHT
+========================================================= */
+
+.ambient {
+
+  position: fixed;
+
+  pointer-events: none;
+
+  z-index: 0;
+
+  filter: blur(80px);
+
+  opacity: .2;
+
+  border-radius: 50%;
+
+}
+
+.ambient-a {
+
+  width: 40vw;
+  height: 40vw;
+
+  right: -15vw;
+  top: 20vh;
+
+  background: var(--violet);
+
+}
+
+.ambient-b {
+
+  width: 35vw;
+  height: 35vw;
+
+  left: -20vw;
+  bottom: 5vh;
+
+  background: var(--cyan);
+
+}
+
+
+/* =========================================================
+   CURSOR
+========================================================= */
+
+#cursorGlow {
+
+  position: fixed;
+
+  z-index: 5;
+
+  width: 220px;
+  height: 220px;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(143,248,255,.08),
+      transparent 65%
+    );
+
+  transform:
+    translate(-50%,-50%);
+
+  opacity: 0;
+
+  transition: opacity .3s;
+
+  mix-blend-mode: screen;
+
+}
+
+
+/* =========================================================
+   BOOT SCREEN
+========================================================= */
+
+.boot-screen {
+
+  position: fixed;
+
+  inset: 0;
+
+  background: #040509;
+
+  z-index: 2000;
+
+  display: grid;
+
+  place-items: center;
+
+  transition:
+    opacity .8s var(--ease),
+    visibility .8s;
+
+}
+
+.boot-screen.done {
+
+  opacity: 0;
+
+  visibility: hidden;
+
+}
+
+.boot-grid {
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+
+    linear-gradient(
+      rgba(255,255,255,.025) 1px,
+      transparent 1px
+    ),
+
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 45px 45px;
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent,
+      black,
+      transparent
+    );
+
+}
+
+.boot-inner {
+
+  width: min(330px,78vw);
+
+  font-size: 9px;
+
+  letter-spacing: .18em;
+
+}
+
+.boot-mark {
+
+  font:
+    700 28px
+    "Orbitron",
+    sans-serif;
+
+  margin-bottom: 36px;
+
+}
+
+.boot-mark span {
+  color: var(--cyan);
+}
+
+.boot-status {
+
+  color: #aeb4c8;
+
+  margin-bottom: 8px;
+
+}
+
+.boot-progress {
+
+  height: 2px;
+
+  background: #1c1f29;
+
+  overflow: hidden;
+
+}
+
+.boot-progress span {
+
+  display: block;
+
+  height: 100%;
+
+  width: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--cyan),
+      var(--violet)
+    );
+
+  box-shadow:
+    0 0 15px var(--cyan);
+
+  transition:
+    width .15s linear;
+
+}
+
+.boot-lines {
+
+  display: grid;
+
+  gap: 7px;
+
+  margin-top: 22px;
+
+  color: #505567;
+
+}
+
+.boot-lines span {
+
+  opacity: 0;
+
+  transform: translateX(-5px);
+
+  animation:
+    bootline .6s forwards;
+
+}
+
+.boot-lines span:nth-child(2) {
+  animation-delay: .25s;
+}
+
+.boot-lines span:nth-child(3) {
+  animation-delay: .5s;
+}
+
+.boot-ready {
+
+  margin-top: 24px;
+
+  color: var(--cyan);
+
+  opacity: 0;
+
+  animation:
+    ready 1s 1s forwards;
+
+}
+
+@keyframes bootline {
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+
+}
+
+@keyframes ready {
+
+  to {
+    opacity: 1;
+  }
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.nav-toggle {
+
+  position: fixed;
+
+  z-index: 1500;
+
+  right: 22px;
+  top: 20px;
+
+  width: 54px;
+  height: 38px;
+
+  border:
+    1px solid var(--line);
+
+  background:
+    rgba(5,6,10,.6);
+
+  backdrop-filter:
+    blur(18px);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 4px;
+
+  border-radius: 14px;
+
+  font:
+    600 9px
+    "Orbitron";
+
+  letter-spacing: .08em;
+
+  cursor: pointer;
+
+  transition: .3s;
+
+}
+
+.nav-toggle:hover {
+
+  border-color:
+    rgba(143,248,255,.5);
+
+  transform:
+    translateY(-2px);
+
+}
+
+.nav-toggle i {
+
+  height: 12px;
+
+  width: 1px;
+
+  background: var(--line);
+
+}
+
+.nav-panel {
+
+  position: fixed;
+
+  z-index: 1400;
+
+  top: 16px;
+  right: 16px;
+
+  width:
+    min(330px,calc(100vw - 32px));
+
+  padding: 24px;
+
+  border:
+    1px solid var(--line);
+
+  border-radius: 24px;
+
+  background:
+    rgba(8,10,16,.88);
+
+  backdrop-filter:
+    blur(30px);
+
+  display: grid;
+
+  gap: 8px;
+
+  transform:
+    translateY(-20px)
+    scale(.96);
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition:
+    .45s var(--ease);
+
+}
+
+.nav-panel.open {
+
+  transform: none;
+
+  opacity: 1;
+
+  pointer-events: auto;
+
+}
+
+.nav-top {
+
+  font:
+    9px
+    "Orbitron";
+
+  letter-spacing: .2em;
+
+  color: var(--cyan);
+
+  margin-bottom: 18px;
+
+}
+
+.nav-panel a,
+.nav-close {
+
+  padding: 16px 12px;
+
+  border: 0;
+
+  border-bottom:
+    1px solid var(--line);
+
+  background: none;
+
+  text-align: left;
+
+  font:
+    500 12px
+    "Space Grotesk";
+
+  letter-spacing: .16em;
+
+  cursor: pointer;
+
+}
+
+.nav-panel a:hover {
+
+  color: var(--cyan);
+
+  padding-left: 18px;
+
+}
+
+.nav-close {
+
+  border: 0;
+
+  color: var(--muted);
+
+  margin-top: 8px;
+
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+
+  display: grid;
+
+  place-items: center;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(120,105,255,.09),
+      transparent 35%
+    ),
+    #05060a;
+
+}
+
+#starfield {
+
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+}
+
+.hero-core {
+
+  position: absolute;
+
+  width: 130px;
+  height: 130px;
+
+  display: grid;
+
+  place-items: center;
+
+}
+
+.core-dot {
+
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  box-shadow:
+    0 0 30px 10px
+    rgba(143,248,255,.55);
+
+  animation:
+    pulse 2.5s infinite;
+
+}
+
+.core-ring {
+
+  position: absolute;
+
+  width: 110px;
+  height: 110px;
+
+  border:
+    1px solid
+    rgba(143,248,255,.22);
+
+  border-radius: 50%;
+
+  animation:
+    ring 5s linear infinite;
+
+}
+
+@keyframes pulse {
+
+  50% {
+
+    transform: scale(2);
+
+    box-shadow:
+      0 0 50px 20px
+      rgba(143,248,255,.15);
+
+  }
+
+}
+
+@keyframes ring {
+
+  to {
+
+    transform:
+      rotate(360deg)
+      scale(1.15);
+
+    opacity: .1;
+
+  }
+
+}
+
+.hero-orbit {
+
+  position: absolute;
+
+  border:
+    1px solid
+    rgba(255,255,255,.07);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+}
+
+.orbit-one {
+
+  width: 42vw;
+  height: 42vw;
+
+  animation:
+    orbit 18s linear infinite;
+
+}
+
+.orbit-two {
+
+  width: 65vw;
+  height: 28vw;
+
+  transform:
+    rotate(-18deg);
+
+  animation:
+    orbit 25s linear infinite reverse;
+
+}
+
+@keyframes orbit {
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+.hero-title {
+
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  gap: .03em;
+
+  font:
+    800 clamp(62px,19vw,220px)/.8
+    "Orbitron";
+
+  letter-spacing: -.09em;
+
+  filter:
+    drop-shadow(
+      0 0 35px
+      rgba(143,248,255,.14)
+    );
+
+}
+
+.hero-title span {
+
+  display: inline-block;
+
+  opacity: 0;
+
+  transform:
+    translateY(40px)
+    scale(.8);
+
+  animation:
+    heroIn 1s var(--ease) forwards;
+
+}
+
+.hero-title span:nth-child(1) {
+  animation-delay: .9s;
+}
+
+.hero-title span:nth-child(2) {
+  animation-delay: 1.02s;
+}
+
+.hero-title span:nth-child(3) {
+  animation-delay: 1.14s;
+}
+
+.hero-title span:nth-child(4) {
+  animation-delay: 1.26s;
+}
+
+.hero-title span:nth-child(2),
+.hero-title span:nth-child(4) {
+
+  color: transparent;
+
+  -webkit-text-stroke:
+    1px rgba(255,255,255,.55);
+
+}
+
+@keyframes heroIn {
+
+  to {
+
+    opacity: 1;
+
+    transform: none;
+
+  }
+
+}
+
+.hero-sub {
+
+  position: absolute;
+
+  top:
+    calc(
+      50% +
+      clamp(80px,13vw,145px)
+    );
+
+  font-size: 8px;
+
+  letter-spacing: .32em;
+
+  color:
+    rgba(255,255,255,.42);
+
+  opacity: 0;
+
+  animation:
+    fadeUp 1s 1.7s forwards;
+
+}
+
+.magnetic-btn {
+
+  border:
+    1px solid
+    rgba(255,255,255,.18);
+
+  background:
+    rgba(255,255,255,.04);
+
+  backdrop-filter:
+    blur(16px);
+
+  border-radius: 999px;
+
+  cursor: pointer;
+
+}
+
+.hero-enter {
+
+  position: absolute;
+
+  bottom: 13vh;
+
+  padding: 13px 18px;
+
+  display: flex;
+
+  gap: 20px;
+
+  align-items: center;
+
+  font:
+    600 9px
+    "Space Grotesk";
+
+  letter-spacing: .22em;
+
+  opacity: 0;
+
+  animation:
+    fadeUp 1s 2s forwards;
+
+  transition: .35s;
+
+}
+
+.hero-enter:hover {
+
+  border-color:
+    rgba(143,248,255,.6);
+
+  box-shadow:
+    0 0 35px
+    rgba(143,248,255,.1);
+
+}
+
+.hero-enter b {
+
+  font-size: 14px;
+
+  font-weight: 400;
+
+  color: var(--cyan);
+
+}
+
+.scroll-hint {
+
+  position: absolute;
+
+  bottom: 28px;
+
+  left: 50%;
+
+  transform:
+    translateX(-50%);
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  color: #4f5566;
+
+  font-size: 8px;
+
+  letter-spacing: .18em;
+
+}
+
+.scroll-hint i {
+
+  display: block;
+
+  width: 26px;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      var(--cyan)
+    );
+
+  animation:
+    hint 1.7s infinite;
+
+}
+
+@keyframes hint {
+
+  50% {
+
+    transform:
+      scaleX(.2);
+
+    opacity: .3;
+
+  }
+
+}
+
+@keyframes fadeUp {
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateY(0);
+
+  }
+
+}
+
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about {
+
+  background:
+    linear-gradient(
+      180deg,
+      #05060a,
+      #080a10
+    );
+
+}
+
+.about-grid {
+
+  max-width: 1200px;
+
+  margin:
+    13vh auto 0;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 9vw;
+
+  align-items: center;
+
+}
+
+.about-head h1 {
+
+  font:
+    800 clamp(80px,14vw,190px)/.8
+    "Orbitron";
+
+  letter-spacing: -.09em;
+
+  margin: 18px 0;
+
+  color: #fff;
+
+}
+
+.about-head h1 span {
+  color: var(--cyan);
+}
+
+.line {
+
+  height: 1px;
+
+  width: 70%;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--cyan),
+      transparent
+    );
+
+}
+
+.about-copy {
+  max-width: 560px;
+}
+
+.about-copy .lead {
+
+  font-size:
+    clamp(24px,3.5vw,42px);
+
+  line-height: 1.1;
+
+  margin: 0 0 28px;
+
+}
+
+.about-copy > p:not(.lead) {
+
+  color: var(--muted);
+
+  line-height: 1.8;
+
+  font-size: 15px;
+
+}
+
+.fact-grid {
+
+  margin-top: 45px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  border-top:
+    1px solid var(--line);
+
+}
+
+.fact-grid div {
+
+  padding: 20px 0;
+
+  border-bottom:
+    1px solid var(--line);
+
+}
+
+.fact-grid small {
+
+  display: block;
+
+  font-size: 8px;
+
+  letter-spacing: .18em;
+
+  color: #62697c;
+
+  margin-bottom: 8px;
+
+}
+
+.fact-grid strong {
+
+  font-size: 13px;
+
+  font-weight: 500;
+
+}
+
+
+/* =========================================================
+   ORIGIN
+========================================================= */
+
+.origin {
+
+  min-height: 100svh;
+
+  background: #07090d;
+
+}
+
+.origin-intro {
+
+  height: 52svh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: end;
+
+  padding:
+    8vw
+    7vw
+    5vh;
+
+  position: relative;
+
+  z-index: 2;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent 20%,
+      #07090d 100%
+    );
+
+}
+
+.origin-intro h2 {
+
+  font:
+    700 clamp(52px,10vw,130px)/.9
+    "Orbitron";
+
+  letter-spacing: -.07em;
+
+  margin: 14px 0;
+
+}
+
+.origin-intro h2 span {
+  color: var(--cyan);
+}
+
+.origin-note {
+
+  color: var(--muted);
+
+  margin: 0;
+
+  font-size: 12px;
+
+  letter-spacing: .12em;
+
+}
+
+
+/* =========================================================
+   GALLERY
+========================================================= */
+
+.gallery {
+
+  position: relative;
+
+  height: 75svh;
+
+  overflow: hidden;
+
+  margin-top: -1px;
+
+}
+
+.gallery-track {
+
+  height: 100%;
+
+  display: flex;
+
+  will-change: transform;
+
+}
+
+.gallery-card {
+
+  height: 100%;
+
+  min-width: 82vw;
+
+  position: relative;
+
+  overflow: hidden;
+
+  border-right:
+    1px solid
+    rgba(255,255,255,.08);
+
+}
+
+.gallery-card img {
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  filter:
+    saturate(.82)
+    contrast(1.05);
+
+  transform: scale(1.04);
+
+  transition:
+    transform 1.2s var(--ease);
+
+}
+
+.gallery-card::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent 40%,
+      rgba(0,0,0,.55)
+    );
+
+}
+
+.gallery-card .photo-label {
+
+  position: absolute;
+
+  z-index: 2;
+
+  left: 28px;
+
+  bottom: 35px;
+
+  font:
+    9px
+    "Orbitron";
+
+  letter-spacing: .2em;
+
+  color: white;
+
+}
+
+.photo-label b {
+  color: var(--cyan);
+}
+
+.gallery-progress {
+
+  position: absolute;
+
+  bottom: 22px;
+
+  left: 7vw;
+
+  right: 7vw;
+
+  height: 1px;
+
+  background:
+    rgba(255,255,255,.2);
+
+  z-index: 3;
+
+}
+
+.gallery-progress span {
+
+  display: block;
+
+  height: 100%;
+
+  width: 0;
+
+  background: var(--cyan);
+
+  box-shadow:
+    0 0 10px var(--cyan);
+
+}
+
+.gallery-counter {
+
+  position: absolute;
+
+  right: 7vw;
+
+  top: 24px;
+
+  z-index: 3;
+
+  font:
+    11px
+    "Orbitron";
+
+  letter-spacing: .12em;
+
+}
+
+.gallery-counter em {
+
+  font-style: normal;
+
+  color: #555b6d;
+
+  margin: 0 7px;
+
+}
+
+
+/* =========================================================
+   MAGIC
+========================================================= */
+
+.magic {
+
+  min-height: 100svh;
+
+  background: #040509;
+
+  display: grid;
+
+  place-items: center;
+
+}
+
+.magic-backdrop {
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(159,140,255,.08),
+      transparent 35%
+    );
+
+}
+
+.magic-content {
+
+  position: relative;
+
+  z-index: 8;
+
+  text-align: center;
+
+  padding: 20px;
+
+  transition:
+    opacity .5s,
+    transform .5s;
+
+}
+
+.magic-content h2 {
+
+  font:
+    800 clamp(56px,15vw,180px)/.82
+    "Orbitron";
+
+  letter-spacing: -.1em;
+
+  margin: 18px 0 24px;
+
+}
+
+.magic-content h2 span {
+
+  color: transparent;
+
+  -webkit-text-stroke:
+    1px var(--cyan);
+
+}
+
+.magic-content p {
+
+  color: #72788a;
+
+  font-size: 12px;
+
+  margin-bottom: 32px;
+
+}
+
+.magic-btn {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 17px 22px;
+
+  border:
+    1px solid
+    rgba(143,248,255,.25);
+
+  border-radius: 999px;
+
+  background:
+    rgba(143,248,255,.035);
+
+  cursor: pointer;
+
+  letter-spacing: .12em;
+
+  font-size: 9px;
+
+  transition: .35s;
+
+  box-shadow:
+    0 0 0
+    rgba(143,248,255,0);
+
+}
+
+.magic-btn:hover {
+
+  border-color: var(--cyan);
+
+  box-shadow:
+    0 0 45px
+    rgba(143,248,255,.12);
+
+  transform:
+    translateY(-3px);
+
+}
+
+.magic-icon {
+
+  color: var(--cyan);
+
+  font-size: 15px;
+
+}
+
+.magic-arrow {
+
+  font-size: 15px;
+
+  color: var(--cyan);
+
+}
+
+
+/* =========================================================
+   MAGIC SCAN
+========================================================= */
+
+.scan-overlay {
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 20;
+
+  pointer-events: none;
+
+  display: grid;
+
+  place-items: center;
+
+  opacity: 0;
+
+}
+
+.scan-overlay.active {
+
+  animation:
+    scan .8s forwards;
+
+}
+
+.scan-text {
+
+  font:
+    700 10px
+    "Orbitron";
+
+  letter-spacing: .22em;
+
+  color: var(--cyan);
+
+  text-shadow:
+    0 0 20px var(--cyan);
+
+}
+
+@keyframes scan {
+
+  0% {
+
+    opacity: 0;
+
+    backdrop-filter: blur(0);
+
+  }
+
+  30% {
+
+    opacity: 1;
+
+    background:
+      rgba(143,248,255,.03);
+
+    backdrop-filter:
+      blur(5px);
+
+  }
+
+  70% {
+
+    opacity: 1;
+
+    transform:
+      skewX(2deg);
+
+  }
+
+  100% {
+
+    opacity: 0;
+
+    transform: none;
+
+  }
+
+}
+
+
+/* =========================================================
+   FRIEND STAGE
+========================================================= */
+
+.friend-stage {
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 10;
+
+  pointer-events: none;
+
+  overflow: hidden;
+
+}
+
+.friend {
+
+  position: absolute;
+
+  width:
+    min(180px,30vw);
+
+  aspect-ratio: 1;
+
+  display: grid;
+
+  place-items: center;
+
+  filter:
+    drop-shadow(
+      0 0 22px
+      rgba(143,248,255,.25)
+    );
+
+  will-change:
+    transform,
+    opacity;
+
+}
+
+.friend img {
+
+  max-width: 100%;
+  max-height: 100%;
+
+  object-fit: contain;
+
+}
+
+.friend .friend-name {
+
+  position: absolute;
+
+  bottom: -22px;
+
+  white-space: nowrap;
+
+  font:
+    600 9px
+    "Orbitron";
+
+  letter-spacing: .13em;
+
+  color: white;
+
+  text-shadow:
+    0 0 12px #000;
+
+}
+
+
+/* =========================================================
+   MAGIC HUD
+========================================================= */
+
+.magic-hud {
+
+  position: absolute;
+
+  z-index: 25;
+
+  top: 25px;
+
+  left: 25px;
+  right: 25px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  font:
+    9px
+    "Orbitron";
+
+  letter-spacing: .16em;
+
+  color: #545b6e;
+
+  opacity: 0;
+
+  transition: .5s;
+
+}
+
+.magic-hud.active {
+  opacity: 1;
+}
+
+.magic-hud span:first-child {
+  color: var(--cyan);
+}
+
+
+/* =========================================================
+   MAGIC END
+========================================================= */
+
+.magic-end {
+
+  position: absolute;
+
+  z-index: 30;
+
+  left: 50%;
+  top: 50%;
+
+  transform:
+    translate(-50%,-50%)
+    scale(.9);
+
+  opacity: 0;
+
+  text-align: center;
+
+  pointer-events: none;
+
+}
+
+.magic-end.show {
+
+  animation:
+    endIn 1.2s forwards;
+
+}
+
+.magic-end span {
+
+  display: block;
+
+  font:
+    10px
+    "Orbitron";
+
+  letter-spacing: .25em;
+
+  color: var(--cyan);
+
+}
+
+.magic-end strong {
+
+  display: block;
+
+  margin-top: 15px;
+
+  font:
+    700 14px
+    "Orbitron";
+
+  letter-spacing: .12em;
+
+}
+
+@keyframes endIn {
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translate(-50%,-50%)
+      scale(1);
+
+  }
+
+}
+
+.magic-chaos {
+
+  animation:
+    chaos .15s steps(2) infinite;
+
+}
+
+.magic-content.hide {
+
+  opacity: 0;
+
+  transform:
+    scale(.96);
+
+  pointer-events: none;
+
+}
+
+@keyframes chaos {
+
+  50% {
+
+    transform:
+      translateX(4px)
+      skewX(.5deg);
+
+  }
+
+}
+
+
+/* =========================================================
+   CONNECT
+========================================================= */
+
+.connect {
+
+  background:
+    linear-gradient(
+      180deg,
+      #05060a,
+      #080a10
+    );
+
+  min-height: 90svh;
+
+}
+
+.connect-head {
+
+  margin:
+    12vh 0
+    8vh;
+
+}
+
+.connect-head h2 {
+
+  font:
+    700 clamp(54px,11vw,130px)/.86
+    "Orbitron";
+
+  letter-spacing: -.08em;
+
+  margin: 18px 0;
+
+}
+
+.connect-head h2 span {
+  color: var(--cyan);
+}
+
+
+/* =========================================================
+   SOCIAL
+========================================================= */
+
+.social-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2,1fr);
+
+  border-top:
+    1px solid var(--line);
+
+  max-width: 1100px;
+
+}
+
+.social-card {
+
+  position: relative;
+
+  min-height: 150px;
+
+  padding: 25px 20px;
+
+  border-bottom:
+    1px solid var(--line);
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  overflow: hidden;
+
+  transition:
+    .45s var(--ease);
+
+}
+
+.social-card:nth-child(odd) {
+
+  border-right:
+    1px solid var(--line);
+
+}
+
+.social-card::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at
+      var(--mx,50%)
+      var(--my,50%),
+      rgba(143,248,255,.12),
+      transparent 35%
+    );
+
+  opacity: 0;
+
+  transition: .3s;
+
+}
+
+.social-card:hover::before {
+  opacity: 1;
+}
+
+.social-card:hover {
+  padding-left: 30px;
+}
+
+.social-no {
+
+  position: absolute;
+
+  top: 20px;
+  left: 20px;
+
+  font:
+    8px
+    "Orbitron";
+
+  color: #555b6d;
+
+}
+
+.social-name {
+
+  position: relative;
+
+  font:
+    500 24px
+    "Space Grotesk";
+
+}
+
+.social-arrow {
+
+  position: relative;
+
+  color: var(--cyan);
+
+  font-size: 20px;
+
+}
+
+
+/* =========================================================
+   END
+========================================================= */
+
+.end {
+
+  min-height: 100svh;
+
+  display: grid;
+
+  place-items: center;
+
+  background: #030407;
+
+}
+
+.end-orb {
+
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  background: white;
+
+  box-shadow:
+    0 0 60px 15px
+    rgba(143,248,255,.5);
+
+  border-radius: 50%;
+
+  animation:
+    endPulse 4s infinite;
+
+}
+
+.end-content {
+
+  text-align: center;
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+.end-mark {
+
+  font:
+    800 clamp(70px,18vw,190px)/.8
+    "Orbitron";
+
+  letter-spacing: -.1em;
+
+  color: #fff;
+
+  text-shadow:
+    0 0 35px
+    rgba(143,248,255,.12);
+
+}
+
+.end-status {
+
+  margin-top: 25px;
+
+  font:
+    9px
+    "Orbitron";
+
+  letter-spacing: .3em;
+
+  color: #555b6d;
+
+}
+
+.replay-btn {
+
+  margin-top: 45px;
+
+  border:
+    1px solid var(--line);
+
+  background: none;
+
+  border-radius: 999px;
+
+  padding: 13px 18px;
+
+  font-size: 9px;
+
+  letter-spacing: .14em;
+
+  color: #7b8193;
+
+  cursor: pointer;
+
+  transition: .3s;
+
+}
+
+.replay-btn:hover {
+
+  color: var(--cyan);
+
+  border-color: var(--cyan);
+
+}
+
+@keyframes endPulse {
+
+  50% {
+
+    box-shadow:
+      0 0 100px 25px
+      rgba(143,248,255,.2);
+
+    transform:
+      scale(1.8);
+
+  }
+
+}
+
+
+/* =========================================================
+   EASTER EGG
+========================================================= */
+
+.easter-egg {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 2500;
+
+  background: #020308;
+
+  display: grid;
+
+  place-items: center;
+
+  opacity: 0;
+
+  visibility: hidden;
+
+  transition: .6s;
+
+}
+
+.easter-egg.show {
+
+  opacity: 1;
+
+  visibility: visible;
+
+}
+
+.egg-glitch {
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+
+    repeating-linear-gradient(
+      transparent 0 4px,
+      rgba(143,248,255,.03) 5px
+    ),
+
+    radial-gradient(
+      circle at center,
+      rgba(159,140,255,.15),
+      transparent 45%
+    );
+
+  animation:
+    eggGlitch .18s infinite alternate;
+
+}
+
+.egg-content {
+
+  text-align: center;
+
+  position: relative;
+
+}
+
+.egg-content > span {
+
+  font:
+    9px
+    "Orbitron";
+
+  letter-spacing: .3em;
+
+  color: var(--cyan);
+
+}
+
+.egg-content h2 {
+
+  font:
+    700 clamp(40px,9vw,90px)/.9
+    "Orbitron";
+
+  letter-spacing: -.06em;
+
+  margin: 20px 0;
+
+}
+
+.egg-content p {
+
+  color: #73798b;
+
+}
+
+.egg-content button {
+
+  margin-top: 30px;
+
+  padding: 12px 18px;
+
+  border:
+    1px solid var(--line);
+
+  background: none;
+
+  border-radius: 999px;
+
+  font-size: 9px;
+
+  letter-spacing: .15em;
+
+  cursor: pointer;
+
+}
+
+@keyframes eggGlitch {
+
+  to {
+
+    transform:
+      translateX(2px);
+
+    filter:
+      hue-rotate(15deg);
+
+  }
+
+}
+
+
+/* =========================================================
+   REVEALS
+========================================================= */
+
+.reveal {
+
+  opacity: 0;
+
+  transform:
+    translateY(30px);
+
+  transition:
+    1s var(--ease);
+
+}
+
+.reveal.visible {
+
+  opacity: 1;
+
+  transform: none;
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width:700px) {
+
+  .section-pad {
+    padding: 13vh 6vw;
+  }
+
+
+  .about-grid {
+
+    grid-template-columns: 1fr;
+
+    gap: 60px;
+
+    margin-top: 11vh;
+
+  }
+
+  .about-head h1 {
+    font-size: 28vw;
+  }
+
+  .about-copy .lead {
+    font-size: 28px;
+  }
+
+
+  .origin-intro {
+
+    height: 45svh;
+
+    padding:
+      12vh
+      6vw
+      4vh;
+
+  }
+
+  .origin-intro h2 {
+    font-size: 17vw;
+  }
+
+
+  .gallery {
+    height: 62svh;
+  }
+
+  .gallery-card {
+    min-width: 88vw;
+  }
+
+
+  .friend {
+    width: 38vw;
+  }
+
+  .friend .friend-name {
+    font-size: 7px;
+  }
+
+
+  .social-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .social-card:nth-child(odd) {
+    border-right: 0;
+  }
+
+
+  .magic-content h2 {
+    font-size: 21vw;
+  }
+
+
+  .hero-sub {
+
+    letter-spacing: .2em;
+
+    font-size: 7px;
+
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion:reduce) {
+
+  *,
+  *::before,
+  *::after {
+
+    animation-duration: .001ms !important;
+
+    animation-iteration-count: 1 !important;
+
+    scroll-behavior: auto !important;
+
+    transition-duration: .001ms !important;
+
+  }
+
+}
