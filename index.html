@@ -1,235 +1,3931 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spider-Man Welcome</title>
-  <style>
-    :root {
-      --spidey-red: #e62429;
-      --spidey-blue: #0074e4;
-      --spidey-dark: #0f1015;
-      --spidey-glow: rgba(230, 36, 41, 0.4);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
+<title>LinkTribe</title>
 
-    body {
-      min-height: 100dvh;
-      background-color: var(--spidey-dark);
-      background-image: 
-        radial-gradient(circle at 50% 30%, rgba(0, 116, 228, 0.15), transparent 60%),
-        radial-gradient(circle at 80% 80%, rgba(230, 36, 41, 0.12), transparent 50%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1.5rem;
-      color: #ffffff;
-      overflow: hidden;
-    }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    /* Floating Web Background Pattern */
-    .web-bg {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      opacity: 0.05;
-      background: radial-gradient(circle, #ffffff 1px, transparent 1px);
-      background-size: 30px 30px;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
-    .card {
-      position: relative;
-      width: 100%;
-      max-width: 420px;
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-top: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 24px;
-      padding: 2.5rem 2rem;
-      text-align: center;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6),
-                  0 0 30px var(--spidey-glow);
-      transform: translateY(0);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+:root{
+  --bg:#0A0A0C;
+  --panel:rgba(22,24,30,.72);
+  --panel2:rgba(255,255,255,.06);
+  --border:rgba(255,255,255,.10);
+  --text:#fff;
+  --muted:#9297a5;
+  --blue:#2563EB;
+  --blue2:#3B82F6;
+  --green:#22c55e;
+  --red:#ef4444;
+}
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7),
-                  0 0 40px var(--spidey-glow);
-    }
+*{
+  scrollbar-width:thin;
+}
 
-    /* Spidey Mask Icon Container */
-    .avatar-wrap {
-      position: relative;
-      width: 110px;
-      height: 110px;
-      margin: 0 auto 1.5rem auto;
-    }
+html,
+body{
+  margin:0;
+  width:100%;
+  height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    Inter,
+    Arial,
+    sans-serif;
+}
 
-    .avatar-glow {
-      position: absolute;
-      inset: -5px;
-      background: linear-gradient(135deg, var(--spidey-red), var(--spidey-blue));
-      border-radius: 50%;
-      filter: blur(12px);
-      opacity: 0.7;
-      animation: pulse 3s infinite alternate;
-    }
+body{
+  overflow:hidden;
+}
 
-    .avatar-body {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      background: #161822;
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
+button,
+input,
+textarea{
+  font:inherit;
+}
 
-    .avatar-body svg {
-      width: 65px;
-      height: 65px;
-    }
+button{
+  cursor:pointer;
+}
 
-    .badge {
-      display: inline-block;
-      padding: 0.35rem 0.9rem;
-      background: rgba(230, 36, 41, 0.15);
-      border: 1px solid rgba(230, 36, 41, 0.4);
-      color: #ff5252;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      border-radius: 20px;
-      margin-bottom: 1rem;
-    }
+.hidden{
+  display:none!important;
+}
 
-    h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 0.75rem;
-      background: linear-gradient(180deg, #ffffff 0%, #b0b5c0 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+/* =========================
+   BACKGROUND
+========================= */
 
-    p {
-      color: #94a3b8;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-    }
+.app{
+  width:100%;
+  height:100dvh;
+  position:relative;
+  overflow:hidden;
+}
 
-    .btn {
-      width: 100%;
-      padding: 0.9rem 1.5rem;
-      background: linear-gradient(135deg, var(--spidey-red) 0%, #b31217 100%);
-      color: #ffffff;
-      border: none;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(230, 36, 41, 0.35);
-      transition: all 0.2s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.5rem;
-    }
+.glow{
+  position:fixed;
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  filter:blur(110px);
+  pointer-events:none;
+  opacity:.22;
+}
 
-    .btn:hover {
-      background: linear-gradient(135deg, #f82d32 0%, var(--spidey-red) 100%);
-      box-shadow: 0 12px 25px rgba(230, 36, 41, 0.5);
-      transform: scale(1.02);
-    }
+.glow1{
+  top:-160px;
+  left:-120px;
+  background:#2563EB;
+}
 
-    .btn:active {
-      transform: scale(0.98);
-    }
+.glow2{
+  bottom:-170px;
+  right:-130px;
+  background:#3B82F6;
+}
 
-    @keyframes pulse {
-      0% { opacity: 0.5; transform: scale(0.98); }
-      100% { opacity: 0.85; transform: scale(1.05); }
-    }
+/* =========================
+   AUTH
+========================= */
 
-    /* Interactive Speech Bubble Notification */
-    .toast {
-      position: absolute;
-      top: -20px;
-      right: -10px;
-      background: var(--spidey-blue);
-      color: #ffffff;
-      padding: 0.4rem 0.8rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 116, 228, 0.4);
-      transform: rotate(6deg) scale(0);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+.auth-page{
+  width:100%;
+  height:100dvh;
+  overflow:auto;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  position:relative;
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(37,99,235,.15),
+      transparent 45%
+    ),
+    var(--bg);
+}
 
-    .toast.active {
-      transform: rotate(6deg) scale(1);
-    }
-  </style>
+.auth-card{
+  width:min(100%,450px);
+  padding:28px;
+  border:1px solid var(--border);
+  border-radius:30px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.09),
+      rgba(255,255,255,.025)
+    );
+  backdrop-filter:blur(35px);
+  -webkit-backdrop-filter:blur(35px);
+  box-shadow:
+    0 30px 100px rgba(0,0,0,.48);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  margin-bottom:25px;
+}
+
+.logo{
+  width:54px;
+  height:54px;
+  display:grid;
+  place-items:center;
+  border-radius:18px;
+  background:
+    linear-gradient(
+      135deg,
+      #2563EB,
+      #60A5FA
+    );
+  font-size:25px;
+  font-weight:900;
+  box-shadow:
+    0 0 35px rgba(37,99,235,.4);
+}
+
+.brand h1{
+  margin:0;
+  font-size:26px;
+  letter-spacing:-1px;
+}
+
+.brand p{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.theme-btn{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:43px;
+  height:43px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--panel2);
+  color:#fff;
+}
+
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  padding:4px;
+  gap:4px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:rgba(0,0,0,.25);
+  margin-bottom:22px;
+}
+
+.tabs button{
+  height:43px;
+  border:0;
+  border-radius:11px;
+  background:transparent;
+  color:var(--muted);
+  font-weight:700;
+}
+
+.tabs button.active{
+  background:rgba(255,255,255,.10);
+  color:#fff;
+}
+
+.form{
+  display:grid;
+  gap:15px;
+}
+
+.field{
+  display:grid;
+  gap:7px;
+}
+
+.field label{
+  font-size:12px;
+  color:#cdd0d8;
+  font-weight:600;
+}
+
+.field input{
+  width:100%;
+  height:52px;
+  padding:0 15px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  outline:none;
+  background:rgba(0,0,0,.25);
+  color:#fff;
+}
+
+.field input:focus{
+  border-color:#3B82F6;
+  box-shadow:
+    0 0 0 4px rgba(37,99,235,.13);
+}
+
+.avatar-picker{
+  min-height:92px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:12px;
+  border:1px dashed rgba(255,255,255,.17);
+  border-radius:17px;
+  background:rgba(255,255,255,.025);
+}
+
+.avatar-picker img{
+  width:65px;
+  height:65px;
+  border-radius:20px;
+  object-fit:cover;
+}
+
+.avatar-picker strong{
+  display:block;
+  font-size:13px;
+}
+
+.avatar-picker span{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.avatar-picker input{
+  position:absolute;
+  inset:0;
+  opacity:0;
+}
+
+.primary{
+  width:100%;
+  height:53px;
+  border:0;
+  border-radius:16px;
+  background:
+    linear-gradient(
+      135deg,
+      #2563EB,
+      #3B82F6
+    );
+  color:#fff;
+  font-weight:800;
+  box-shadow:
+    0 12px 35px rgba(37,99,235,.28);
+}
+
+.primary:disabled{
+  opacity:.55;
+}
+
+.error{
+  min-height:18px;
+  color:#ff8799;
+  font-size:12px;
+  line-height:1.4;
+}
+
+.auth-note{
+  margin:16px 0 0;
+  text-align:center;
+  color:var(--muted);
+  font-size:10px;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard{
+  width:100%;
+  height:100dvh;
+  display:flex;
+  overflow:hidden;
+}
+
+.sidebar{
+  width:330px;
+  height:100%;
+  flex-shrink:0;
+  border-right:1px solid var(--border);
+  background:rgba(10,11,15,.82);
+  backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+  display:flex;
+  flex-direction:column;
+  z-index:30;
+}
+
+.sidebar-header{
+  padding:16px;
+  border-bottom:1px solid var(--border);
+}
+
+.user-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.user-info{
+  flex:1;
+  min-width:0;
+}
+
+.user-info strong{
+  display:block;
+  font-size:13px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.user-info span{
+  display:block;
+  color:var(--green);
+  font-size:10px;
+  margin-top:3px;
+}
+
+.avatar-wrap{
+  width:44px;
+  height:44px;
+  position:relative;
+  flex-shrink:0;
+}
+
+.avatar{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  border-radius:15px;
+  border:1px solid rgba(255,255,255,.1);
+  background:#172033;
+}
+
+.status{
+  position:absolute;
+  right:-2px;
+  bottom:-2px;
+  width:11px;
+  height:11px;
+  border:2px solid #111218;
+  border-radius:50%;
+  background:#555;
+}
+
+.status.online{
+  background:var(--green);
+  box-shadow:0 0 10px rgba(34,197,94,.8);
+}
+
+.small-btn{
+  width:42px;
+  height:42px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:var(--panel2);
+  color:#fff;
+}
+
+.search{
+  margin-top:14px;
+  height:46px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:0 13px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(255,255,255,.045);
+}
+
+.search span{
+  color:#858b99;
+  font-size:18px;
+}
+
+.search input{
+  width:100%;
+  height:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#fff;
+}
+
+.search-area{
+  position:relative;
+}
+
+.search-results{
+  position:absolute;
+  top:54px;
+  left:0;
+  right:0;
+  padding:5px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:#171920;
+  box-shadow:0 25px 70px rgba(0,0,0,.5);
+  z-index:50;
+}
+
+.search-result{
+  width:100%;
+  min-height:55px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px;
+  border:0;
+  border-radius:11px;
+  background:transparent;
+  color:#fff;
+  text-align:left;
+}
+
+.search-result:hover{
+  background:rgba(255,255,255,.06);
+}
+
+.result-info{
+  flex:1;
+}
+
+.result-info strong{
+  display:block;
+  font-size:12px;
+}
+
+.result-info span{
+  display:block;
+  color:var(--muted);
+  font-size:9px;
+  margin-top:3px;
+}
+
+.section{
+  padding:17px 16px 8px;
+  color:#727887;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  font-weight:700;
+}
+
+.chat-list{
+  flex:1;
+  overflow:auto;
+  padding:0 8px 15px;
+}
+
+.chat-item{
+  width:100%;
+  min-height:65px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px;
+  border:0;
+  border-radius:14px;
+  background:transparent;
+  color:#fff;
+  text-align:left;
+}
+
+.chat-item:hover,
+.chat-item.active{
+  background:rgba(37,99,235,.12);
+}
+
+.chat-info{
+  flex:1;
+  min-width:0;
+}
+
+.chat-info strong{
+  display:block;
+  font-size:12px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.chat-info span{
+  display:block;
+  margin-top:5px;
+  color:#777d8c;
+  font-size:9px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.empty{
+  padding:45px 20px;
+  text-align:center;
+  color:var(--muted);
+}
+
+.empty-logo{
+  width:54px;
+  height:54px;
+  display:grid;
+  place-items:center;
+  margin:0 auto 13px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#2563EB,#60A5FA);
+  font-weight:900;
+}
+
+/* =========================
+   CHAT
+========================= */
+
+.chat{
+  flex:1;
+  min-width:0;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+
+.chat-header{
+  min-height:70px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 16px;
+  border-bottom:1px solid var(--border);
+  background:rgba(8,9,13,.72);
+  backdrop-filter:blur(25px);
+  -webkit-backdrop-filter:blur(25px);
+}
+
+.mobile-menu{
+  display:none;
+  width:40px;
+  height:40px;
+  border:0;
+  border-radius:12px;
+  background:transparent;
+  color:#aaa;
+  font-size:19px;
+}
+
+.chat-person{
+  flex:1;
+  min-width:0;
+}
+
+.chat-person strong{
+  display:block;
+  font-size:13px;
+}
+
+.chat-person span{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:9px;
+}
+
+.chat-person span.online{
+  color:var(--green);
+}
+
+.chat-actions{
+  display:flex;
+  gap:4px;
+}
+
+.chat-actions button{
+  width:39px;
+  height:39px;
+  border:0;
+  border-radius:12px;
+  background:transparent;
+  color:#9ca1af;
+  font-size:17px;
+}
+
+.chat-actions button:hover{
+  background:rgba(255,255,255,.06);
+  color:#fff;
+}
+
+.messages{
+  flex:1;
+  min-height:0;
+  overflow:auto;
+  padding:25px max(12px,4vw);
+}
+
+.welcome{
+  height:100%;
+  display:grid;
+  place-items:center;
+  text-align:center;
+}
+
+.welcome-box{
+  max-width:380px;
+}
+
+.welcome-logo{
+  width:85px;
+  height:85px;
+  margin:0 auto 22px;
+  display:grid;
+  place-items:center;
+  border-radius:28px;
+  background:linear-gradient(135deg,#2563EB,#60A5FA);
+  font-size:35px;
+  font-weight:900;
+  box-shadow:0 0 55px rgba(37,99,235,.35);
+}
+
+.welcome h2{
+  margin:0;
+  font-size:26px;
+  letter-spacing:-1px;
+}
+
+.welcome p{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+.message{
+  display:flex;
+  margin:7px 0;
+}
+
+.message.mine{
+  justify-content:flex-end;
+}
+
+.bubble{
+  max-width:min(78%,580px);
+  padding:10px 12px 7px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:18px 18px 18px 5px;
+  background:rgba(255,255,255,.065);
+}
+
+.message.mine .bubble{
+  border-radius:18px 18px 5px 18px;
+  background:linear-gradient(135deg,#2563EB,#1D4ED8);
+}
+
+.text{
+  font-size:14px;
+  line-height:1.5;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+.meta{
+  display:flex;
+  justify-content:flex-end;
+  gap:5px;
+  margin-top:5px;
+  color:rgba(255,255,255,.48);
+  font-size:8px;
+}
+
+.read{
+  color:#9edbff;
+}
+
+.message-image{
+  display:block;
+  max-width:280px;
+  max-height:350px;
+  border-radius:13px;
+}
+
+/* =========================
+   COMPOSER
+========================= */
+
+.composer{
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:9px 14px;
+  border-top:1px solid var(--border);
+  background:rgba(8,9,13,.75);
+  backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+}
+
+.composer-input{
+  flex:1;
+  min-width:0;
+  height:49px;
+  padding:0 14px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  outline:0;
+  background:rgba(255,255,255,.055);
+  color:#fff;
+}
+
+.composer-input:focus{
+  border-color:rgba(59,130,246,.65);
+}
+
+.composer-btn{
+  width:43px;
+  height:43px;
+  flex-shrink:0;
+  border:0;
+  border-radius:13px;
+  background:transparent;
+  color:#9da2af;
+  font-size:20px;
+}
+
+.composer-btn:hover{
+  background:rgba(255,255,255,.06);
+  color:#fff;
+}
+
+.send{
+  width:44px;
+  height:44px;
+  flex-shrink:0;
+  border:0;
+  border-radius:13px;
+  background:#2563EB;
+  color:#fff;
+  font-size:18px;
+}
+
+.mic{
+  width:44px;
+  height:44px;
+  flex-shrink:0;
+  border:0;
+  border-radius:13px;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-size:17px;
+}
+
+/* =========================
+   RECORDING
+========================= */
+
+.recording{
+  width:100%;
+  height:49px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.record-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#ef4444;
+  box-shadow:0 0 13px rgba(239,68,68,.8);
+  animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+  50%{
+    transform:scale(1.4);
+    opacity:.55;
+  }
+}
+
+.wave{
+  flex:1;
+  height:30px;
+  display:flex;
+  align-items:center;
+  gap:2px;
+  overflow:hidden;
+}
+
+.wave i{
+  width:3px;
+  height:7px;
+  border-radius:4px;
+  background:#3B82F6;
+  animation:wave .6s infinite alternate;
+}
+
+.wave i:nth-child(2n){
+  animation-delay:.1s;
+}
+
+.wave i:nth-child(3n){
+  animation-delay:.2s;
+}
+
+@keyframes wave{
+  to{
+    height:25px;
+  }
+}
+
+.stop{
+  width:40px;
+  height:40px;
+  border:0;
+  border-radius:12px;
+  background:#ef4444;
+  color:#fff;
+}
+
+/* =========================
+   TYPING
+========================= */
+
+.typing{
+  width:55px;
+  height:33px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  border-radius:17px;
+  background:rgba(255,255,255,.065);
+}
+
+.typing i{
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#aaa;
+  animation:typing 1s infinite;
+}
+
+.typing i:nth-child(2){
+  animation-delay:.15s;
+}
+
+.typing i:nth-child(3){
+  animation-delay:.3s;
+}
+
+@keyframes typing{
+  50%{
+    transform:translateY(-4px);
+    opacity:.4;
+  }
+}
+
+/* =========================
+   CONNECTION
+========================= */
+
+.connection{
+  position:fixed;
+  top:12px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:100;
+  padding:8px 14px;
+  border-radius:999px;
+  background:#171920;
+  border:1px solid var(--border);
+  color:#ffd27b;
+  font-size:10px;
+}
+
+/* =========================
+   LIGHT MODE
+========================= */
+
+body.light{
+  --bg:#f3f6fb;
+  --panel:rgba(255,255,255,.8);
+  --panel2:rgba(0,0,0,.045);
+  --border:rgba(0,0,0,.09);
+  --text:#101217;
+  --muted:#687080;
+}
+
+body.light .sidebar{
+  background:rgba(255,255,255,.78);
+}
+
+body.light .chat-header,
+body.light .composer{
+  background:rgba(255,255,255,.72);
+}
+
+body.light .field input,
+body.light .composer-input{
+  color:#111;
+  background:rgba(255,255,255,.8);
+}
+
+body.light .auth-card{
+  background:rgba(255,255,255,.78);
+}
+
+body.light .message:not(.mine) .bubble{
+  background:rgba(0,0,0,.055);
+}
+
+body.light .welcome h2,
+body.light .brand h1{
+  color:#111;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:760px){
+
+  .sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    width:min(88vw,350px);
+    transform:translateX(-105%);
+    transition:transform .22s ease;
+    box-shadow:30px 0 90px rgba(0,0,0,.5);
+  }
+
+  .sidebar.open{
+    transform:translateX(0);
+  }
+
+  .mobile-menu{
+    display:grid;
+    place-items:center;
+  }
+
+  .chat-header{
+    padding:9px;
+  }
+
+  .messages{
+    padding:17px 10px;
+  }
+
+  .bubble{
+    max-width:87%;
+  }
+
+  .composer{
+    padding:
+      8px
+      8px
+      calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .composer-btn{
+    display:none;
+  }
+
+  .auth-card{
+    padding:23px 18px;
+  }
+
+  .auth-page{
+    padding:14px;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <div class="web-bg"></div>
+<div class="app">
 
-  <main class="card">
-    <div class="avatar-wrap">
-      <div class="avatar-glow"></div>
-      <div class="avatar-body">
-        <!-- Minimal Spidey Icon -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="#e62429" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2C6.48 2 2 6.48 2 12c0 3.2 1.5 6.05 3.84 7.89L12 22l6.16-2.11C20.5 18.05 22 15.2 22 12c0-5.52-4.48-10-10-10z" fill="#12131c"/>
-          <path d="M7 10c1.5 2.5 4 4 5 4s3.5-1.5 5-4c-1.5 4.5-5 7-5 7s-3.5-2.5-5-7z" fill="#e62429"/>
-          <ellipse cx="8.5" cy="10.5" rx="2.5" ry="1.5" fill="#ffffff" transform="rotate(-15 8.5 10.5)"/>
-          <ellipse cx="15.5" cy="10.5" rx="2.5" ry="1.5" fill="#ffffff" transform="rotate(15 15.5 10.5)"/>
-        </svg>
-      </div>
-      <div class="toast" id="spideyToast">Thwip! 🕸️</div>
-    </div>
+<div class="glow glow1"></div>
+<div class="glow glow2"></div>
 
-    <span class="badge">Friendly Neighborhood AI</span>
-    <h1>"Hey there, static!"</h1>
-    <p>Your friendly neighborhood Spider-Man just swung by to welcome you to the site. Everything is secured and ready to roll!</p>
+<div id="root"></div>
 
-    <button class="btn" onclick="sayHi()">
-      <span>Say Hi Back</span>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+</div>
+
+<script>
+
+/* =====================================================
+   LINKTRIBE SUPABASE CONFIG
+===================================================== */
+
+const SUPABASE_URL =
+"https://duqpnsipaxtcacyupxir.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_r1OTFhVXXw0-5_fvs0qSqA_hNY92N_A";
+
+const supabase =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let currentUser = null;
+let currentProfile = null;
+
+let authMode = "register";
+
+let activeConversation = null;
+let activePartner = null;
+
+let conversations = [];
+let messages = [];
+
+let presenceChannel = null;
+let messageChannel = null;
+let typingChannel = null;
+
+let onlineUsers = new Set();
+
+let typingTimer = null;
+let isTyping = false;
+
+let recorder = null;
+let recordingChunks = [];
+let recordingStart = 0;
+
+let theme =
+localStorage.getItem("linktribe_theme") ||
+"dark";
+
+let soundEnabled =
+localStorage.getItem("linktribe_sound") !== "false";
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function escapeHTML(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function avatarSVG(username){
+
+  const letter =
+    String(username || "?")
+    .charAt(0)
+    .toUpperCase();
+
+  const svg = `
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="0 0 100 100">
+
+    <defs>
+      <linearGradient id="g"
+        x1="0" y1="0"
+        x2="1" y2="1">
+
+        <stop offset="0%"
+          stop-color="#2563EB"/>
+
+        <stop offset="100%"
+          stop-color="#60A5FA"/>
+
+      </linearGradient>
+    </defs>
+
+    <rect
+      width="100"
+      height="100"
+      rx="30"
+      fill="url(#g)"
+    />
+
+    <circle
+      cx="50"
+      cy="50"
+      r="39"
+      fill="rgba(255,255,255,.08)"
+    />
+
+    <text
+      x="50"
+      y="66"
+      text-anchor="middle"
+      font-family="Arial"
+      font-size="48"
+      font-weight="700"
+      fill="white">
+
+      ${letter}
+
+    </text>
+
+  </svg>`;
+
+  return "data:image/svg+xml;charset=utf-8," +
+    encodeURIComponent(svg);
+}
+
+function avatar(profile){
+
+  if(profile?.avatar_url)
+    return profile.avatar_url;
+
+  return avatarSVG(
+    profile?.username
+  );
+}
+
+function time(value){
+
+  return new Date(value)
+    .toLocaleTimeString(
+      [],
+      {
+        hour:"2-digit",
+        minute:"2-digit"
+      }
+    );
+}
+
+function playSound(){
+
+  if(!soundEnabled)
+    return;
+
+  try{
+
+    const AudioContext =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if(!AudioContext)
+      return;
+
+    const ctx =
+      new AudioContext();
+
+    const osc =
+      ctx.createOscillator();
+
+    const gain =
+      ctx.createGain();
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.frequency.value = 620;
+
+    gain.gain.setValueAtTime(
+      .001,
+      ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      .025,
+      ctx.currentTime + .01
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      .001,
+      ctx.currentTime + .12
+    );
+
+    osc.start();
+    osc.stop(
+      ctx.currentTime + .13
+    );
+
+  }catch(e){}
+}
+
+
+/* =====================================================
+   THEME
+===================================================== */
+
+function applyTheme(){
+
+  document.body.classList.toggle(
+    "light",
+    theme === "light"
+  );
+
+}
+
+function toggleTheme(){
+
+  theme =
+    theme === "dark"
+      ? "light"
+      : "dark";
+
+  localStorage.setItem(
+    "linktribe_theme",
+    theme
+  );
+
+  applyTheme();
+
+  if(currentUser)
+    renderApp();
+  else
+    renderAuth();
+}
+
+
+/* =====================================================
+   AUTH UI
+===================================================== */
+
+function renderAuth(){
+
+  applyTheme();
+
+  $("root").innerHTML = `
+
+  <main class="auth-page">
+
+    <button
+      class="theme-btn"
+      onclick="toggleTheme()">
+
+      ${theme === "dark" ? "☀" : "☾"}
+
     </button>
+
+    <section class="auth-card">
+
+      <div class="brand">
+
+        <div class="logo">
+          L
+        </div>
+
+        <div>
+
+          <h1>
+            LinkTribe
+          </h1>
+
+          <p>
+            Connect without friction.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="tabs">
+
+        <button
+          id="registerTab"
+          class="active"
+          onclick="changeAuthMode('register')">
+
+          Join Tribe
+
+        </button>
+
+        <button
+          id="loginTab"
+          onclick="changeAuthMode('login')">
+
+          Enter Tribe
+
+        </button>
+
+      </div>
+
+
+      <form
+        class="form"
+        id="authForm">
+
+        <div class="field">
+
+          <label>
+            Username
+          </label>
+
+          <input
+            id="username"
+            maxlength="24"
+            autocomplete="username"
+            placeholder="Choose a username"
+            required
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Password
+          </label>
+
+          <input
+            id="password"
+            type="password"
+            autocomplete="new-password"
+            placeholder="At least 6 characters"
+            required
+          >
+
+        </div>
+
+
+        <div id="avatarBox">
+
+          <div class="field">
+
+            <label>
+              Profile picture
+            </label>
+
+            <div class="avatar-picker">
+
+              <img
+                id="avatarPreview"
+                src="${avatarSVG("L")}"
+              >
+
+              <div>
+
+                <strong>
+                  Add your picture
+                </strong>
+
+                <span>
+                  Optional · PNG, JPG or WebP
+                </span>
+
+              </div>
+
+              <input
+                id="avatarInput"
+                type="file"
+                accept="image/*"
+              >
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="error"
+          id="authError">
+        </div>
+
+
+        <button
+          class="primary"
+          id="authButton"
+          type="submit">
+
+          Create your LinkTribe
+
+        </button>
+
+      </form>
+
+
+      <p class="auth-note">
+        No email · No social login · Username only
+      </p>
+
+    </section>
+
   </main>
 
-  <script>
-    function sayHi() {
-      const toast = document.getElementById('spideyToast');
-      toast.classList.add('active');
-      
-      setTimeout(() => {
-        toast.classList.remove('active');
-      }, 2500);
+  `;
+
+  $("authForm")
+    .addEventListener(
+      "submit",
+      submitAuth
+    );
+
+  $("username")
+    .addEventListener(
+      "input",
+      updateAvatarPreview
+    );
+
+  $("avatarInput")
+    .addEventListener(
+      "change",
+      previewUploadedAvatar
+    );
+}
+
+
+/* =====================================================
+   AUTH MODE
+===================================================== */
+
+function changeAuthMode(mode){
+
+  authMode = mode;
+
+  $("registerTab")
+    .classList.toggle(
+      "active",
+      mode === "register"
+    );
+
+  $("loginTab")
+    .classList.toggle(
+      "active",
+      mode === "login"
+    );
+
+  $("avatarBox")
+    .classList.toggle(
+      "hidden",
+      mode !== "register"
+    );
+
+  $("authButton")
+    .textContent =
+      mode === "register"
+        ? "Create your LinkTribe"
+        : "Enter LinkTribe";
+
+  $("authError").textContent = "";
+}
+
+
+/* =====================================================
+   AVATAR PREVIEW
+===================================================== */
+
+function updateAvatarPreview(){
+
+  const file =
+    $("avatarInput")?.files?.[0];
+
+  if(file)
+    return;
+
+  $("avatarPreview").src =
+    avatarSVG(
+      $("username").value || "L"
+    );
+}
+
+function previewUploadedAvatar(event){
+
+  const file =
+    event.target.files?.[0];
+
+  if(!file)
+    return;
+
+  const url =
+    URL.createObjectURL(file);
+
+  $("avatarPreview").src = url;
+}
+
+
+/* =====================================================
+   IMAGE COMPRESSION
+===================================================== */
+
+async function compressImage(file){
+
+  const img =
+    await new Promise(
+      (resolve,reject) => {
+
+        const image =
+          new Image();
+
+        image.onload =
+          () => resolve(image);
+
+        image.onerror =
+          reject;
+
+        image.src =
+          URL.createObjectURL(file);
+
+      }
+    );
+
+  const max = 800;
+
+  let width = img.width;
+  let height = img.height;
+
+  if(width > max){
+
+    height =
+      Math.round(
+        height * max / width
+      );
+
+    width = max;
+  }
+
+  const canvas =
+    document.createElement("canvas");
+
+  canvas.width = width;
+  canvas.height = height;
+
+  canvas
+    .getContext("2d")
+    .drawImage(
+      img,
+      0,
+      0,
+      width,
+      height
+    );
+
+  return await new Promise(
+    resolve =>
+      canvas.toBlob(
+        resolve,
+        "image/webp",
+        .82
+      )
+  );
+}
+
+
+/* =====================================================
+   AUTHENTICATION
+===================================================== */
+
+async function submitAuth(event){
+
+  event.preventDefault();
+
+  const username =
+    $("username")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const password =
+    $("password")
+      .value;
+
+  const errorBox =
+    $("authError");
+
+  const button =
+    $("authButton");
+
+  errorBox.textContent = "";
+
+  if(!/^[a-z0-9_.-]{3,24}$/.test(username)){
+
+    errorBox.textContent =
+      "Username must be 3-24 characters and use only letters, numbers, dots, underscores or hyphens.";
+
+    return;
+  }
+
+  if(password.length < 6){
+
+    errorBox.textContent =
+      "Password must contain at least 6 characters.";
+
+    return;
+  }
+
+  button.disabled = true;
+
+  button.textContent =
+    authMode === "register"
+      ? "Creating account..."
+      : "Signing in...";
+
+  try{
+
+    const result =
+      await supabase.functions.invoke(
+        "bright-api",
+        {
+          body:{
+            action:authMode,
+            username,
+            password
+          }
+        }
+      );
+
+    if(result.error)
+      throw result.error;
+
+    if(!result.data?.success){
+
+      throw new Error(
+        result.data?.error ||
+        "Authentication failed."
+      );
+
     }
-  </script>
+
+    if(result.data.session){
+
+      const {
+        error
+      } =
+      await supabase.auth.setSession(
+        result.data.session
+      );
+
+      if(error)
+        throw error;
+    }
+
+    await loadCurrentUser();
+
+    if(
+      authMode === "register"
+    ){
+
+      const file =
+        $("avatarInput")
+          ?.files?.[0];
+
+      if(file)
+        await uploadAvatar(file);
+
+    }
+
+    await bootApplication();
+
+  }catch(error){
+
+    console.error(error);
+
+    errorBox.textContent =
+      error.message ||
+      "Something went wrong.";
+
+    button.disabled = false;
+
+    button.textContent =
+      authMode === "register"
+        ? "Create your LinkTribe"
+        : "Enter LinkTribe";
+  }
+}
+
+
+/* =====================================================
+   LOAD CURRENT USER
+===================================================== */
+
+async function loadCurrentUser(){
+
+  const {
+    data:{
+      user
+    }
+  } =
+  await supabase.auth.getUser();
+
+  if(!user)
+    throw new Error(
+      "Session could not be established."
+    );
+
+  currentUser = user;
+
+  const {
+    data,
+    error
+  } =
+  await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id",user.id)
+    .single();
+
+  if(error)
+    throw error;
+
+  currentProfile = data;
+}
+
+
+/* =====================================================
+   AVATAR UPLOAD
+===================================================== */
+
+async function uploadAvatar(file){
+
+  if(!currentUser)
+    return;
+
+  const image =
+    await compressImage(file);
+
+  const path =
+    currentUser.id +
+    "/avatar-" +
+    Date.now() +
+    ".webp";
+
+  const {
+    error
+  } =
+  await supabase
+    .storage
+    .from("linktribe-media")
+    .upload(
+      path,
+      image,
+      {
+        contentType:"image/webp",
+        upsert:true
+      }
+    );
+
+  if(error)
+    throw error;
+
+  const {
+    data
+  } =
+  supabase
+    .storage
+    .from("linktribe-media")
+    .getPublicUrl(path);
+
+  await supabase
+    .from("profiles")
+    .update({
+      avatar_url:data.publicUrl
+    })
+    .eq(
+      "id",
+      currentUser.id
+    );
+
+  currentProfile.avatar_url =
+    data.publicUrl;
+}
+
+
+/* =====================================================
+   BOOT
+===================================================== */
+
+async function bootApplication(){
+
+  applyTheme();
+
+  await loadConversations();
+
+  setupPresence();
+
+  setupMessagesRealtime();
+
+  renderApp();
+
+}
+
+
+/* =====================================================
+   CONVERSATIONS
+===================================================== */
+
+async function loadConversations(){
+
+  const {
+    data,
+    error
+  } =
+  await supabase
+    .from("conversations")
+    .select("*")
+    .or(
+      "user_one.eq." +
+      currentUser.id +
+      ",user_two.eq." +
+      currentUser.id
+    )
+    .order(
+      "created_at",
+      {
+        ascending:false
+      }
+    );
+
+  if(error){
+
+    console.error(error);
+
+    conversations = [];
+
+    return;
+  }
+
+  conversations = data || [];
+
+  const ids =
+    conversations.map(
+      c =>
+        c.user_one === currentUser.id
+          ? c.user_two
+          : c.user_one
+    );
+
+  if(!ids.length)
+    return;
+
+  const {
+    data:profiles
+  } =
+  await supabase
+    .from("profiles")
+    .select("*")
+    .in("id",ids);
+
+  conversations =
+    conversations.map(
+      conversation => {
+
+        const id =
+          conversation.user_one === currentUser.id
+            ? conversation.user_two
+            : conversation.user_one;
+
+        return {
+          ...conversation,
+          partner:
+            profiles?.find(
+              p => p.id === id
+            )
+        };
+
+      }
+    );
+}
+
+
+/* =====================================================
+   FIND / CREATE CONVERSATION
+===================================================== */
+
+async function startConversation(profile){
+
+  if(
+    !profile ||
+    profile.id === currentUser.id
+  )
+    return;
+
+  const {
+    data,
+    error
+  } =
+  await supabase
+    .rpc(
+      "get_or_create_conversation",
+      {
+        other_user:profile.id
+      }
+    );
+
+  if(error){
+
+    alert(
+      "Conversation setup error: " +
+      error.message
+    );
+
+    return;
+  }
+
+  activeConversation = data;
+  activePartner = profile;
+
+  await loadMessages();
+
+  await loadConversations();
+
+  await markRead();
+
+  renderApp();
+
+  closeSidebar();
+}
+
+
+/* =====================================================
+   LOAD MESSAGES
+===================================================== */
+
+async function loadMessages(){
+
+  if(!activeConversation){
+
+    messages = [];
+
+    return;
+  }
+
+  const {
+    data,
+    error
+  } =
+  await supabase
+    .from("messages")
+    .select("*")
+    .eq(
+      "conversation_id",
+      activeConversation
+    )
+    .order(
+      "created_at",
+      {
+        ascending:true
+      }
+    );
+
+  if(error){
+
+    console.error(error);
+
+    return;
+  }
+
+  messages = data || [];
+}
+
+
+/* =====================================================
+   SEND MESSAGE
+===================================================== */
+
+async function sendMessage(){
+
+  if(!activeConversation)
+    return;
+
+  const input =
+    $("messageInput");
+
+  const text =
+    input.value.trim();
+
+  if(!text)
+    return;
+
+  input.value = "";
+
+  stopTyping();
+
+  const {
+    error
+  } =
+  await supabase
+    .from("messages")
+    .insert({
+      conversation_id:
+        activeConversation,
+
+      sender_id:
+        currentUser.id,
+
+      message_type:
+        "text",
+
+      content:text
+    });
+
+  if(error){
+
+    console.error(error);
+
+    input.value = text;
+
+    return;
+  }
+
+  playSound();
+}
+
+
+/* =====================================================
+   SEND IMAGE
+===================================================== */
+
+async function sendImage(file){
+
+  if(
+    !file ||
+    !activeConversation
+  )
+    return;
+
+  try{
+
+    const image =
+      await compressImage(file);
+
+    const path =
+      currentUser.id +
+      "/images/" +
+      Date.now() +
+      ".webp";
+
+    const {
+      error:uploadError
+    } =
+    await supabase
+      .storage
+      .from("linktribe-media")
+      .upload(
+        path,
+        image,
+        {
+          contentType:"image/webp"
+        }
+      );
+
+    if(uploadError)
+      throw uploadError;
+
+    const {
+      data
+    } =
+    supabase
+      .storage
+      .from("linktribe-media")
+      .getPublicUrl(path);
+
+    const {
+      error
+    } =
+    await supabase
+      .from("messages")
+      .insert({
+        conversation_id:
+          activeConversation,
+
+        sender_id:
+          currentUser.id,
+
+        message_type:
+          "image",
+
+        media_url:
+          data.publicUrl
+      });
+
+    if(error)
+      throw error;
+
+    playSound();
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Image could not be sent."
+    );
+
+  }
+}
+
+
+/* =====================================================
+   VOICE RECORDING
+===================================================== */
+
+async function startRecording(){
+
+  if(!activeConversation)
+    return;
+
+  try{
+
+    const stream =
+      await navigator.mediaDevices
+        .getUserMedia({
+          audio:true
+        });
+
+    recordingChunks = [];
+
+    recorder =
+      new MediaRecorder(stream);
+
+    recordingStart =
+      Date.now();
+
+    recorder.ondataavailable =
+      event => {
+
+        if(event.data.size)
+          recordingChunks.push(
+            event.data
+          );
+
+      };
+
+    recorder.onstop =
+      async () => {
+
+        const duration =
+          Math.max(
+            1,
+            Math.round(
+              (Date.now() -
+              recordingStart) / 1000
+            )
+          );
+
+        const blob =
+          new Blob(
+            recordingChunks,
+            {
+              type:
+                recorder.mimeType ||
+                "audio/webm"
+            }
+          );
+
+        stream
+          .getTracks()
+          .forEach(
+            track =>
+              track.stop()
+          );
+
+        await sendVoice(
+          blob,
+          duration
+        );
+
+      };
+
+    recorder.start();
+
+    renderRecording();
+
+  }catch(error){
+
+    alert(
+      "Microphone access is required for voice messages."
+    );
+
+  }
+}
+
+function stopRecording(){
+
+  if(
+    recorder &&
+    recorder.state !== "inactive"
+  ){
+
+    recorder.stop();
+
+  }
+
+  recorder = null;
+
+  renderApp();
+}
+
+
+/* =====================================================
+   SEND VOICE
+===================================================== */
+
+async function sendVoice(
+  blob,
+  duration
+){
+
+  try{
+
+    const path =
+      currentUser.id +
+      "/voice/" +
+      Date.now() +
+      ".webm";
+
+    const {
+      error:uploadError
+    } =
+    await supabase
+      .storage
+      .from("linktribe-media")
+      .upload(
+        path,
+        blob,
+        {
+          contentType:"audio/webm"
+        }
+      );
+
+    if(uploadError)
+      throw uploadError;
+
+    const {
+      data
+    } =
+    supabase
+      .storage
+      .from("linktribe-media")
+      .getPublicUrl(path);
+
+    const {
+      error
+    } =
+    await supabase
+      .from("messages")
+      .insert({
+        conversation_id:
+          activeConversation,
+
+        sender_id:
+          currentUser.id,
+
+        message_type:
+          "voice",
+
+        media_url:
+          data.publicUrl,
+
+        duration
+      });
+
+    if(error)
+      throw error;
+
+    playSound();
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Voice message could not be sent."
+    );
+
+  }
+}
+
+
+/* =====================================================
+   READ RECEIPTS
+===================================================== */
+
+async function markRead(){
+
+  if(!activeConversation)
+    return;
+
+  const ids =
+    messages
+      .filter(
+        m =>
+          m.sender_id !== currentUser.id &&
+          !m.is_read
+      )
+      .map(
+        m => m.id
+      );
+
+  if(!ids.length)
+    return;
+
+  await supabase
+    .from("messages")
+    .update({
+      is_read:true
+    })
+    .in("id",ids);
+}
+
+
+/* =====================================================
+   REALTIME MESSAGES
+===================================================== */
+
+function setupMessagesRealtime(){
+
+  if(messageChannel){
+
+    supabase.removeChannel(
+      messageChannel
+    );
+
+  }
+
+  messageChannel =
+    supabase.channel(
+      "linktribe-messages"
+    );
+
+  messageChannel
+    .on(
+      "postgres_changes",
+      {
+        event:"INSERT",
+        schema:"public",
+        table:"messages"
+      },
+      async payload => {
+
+        const message =
+          payload.new;
+
+        if(
+          activeConversation ===
+          message.conversation_id
+        ){
+
+          if(
+            !messages.some(
+              m =>
+                m.id === message.id
+            )
+          ){
+
+            messages.push(message);
+
+            if(
+              message.sender_id !==
+              currentUser.id
+            ){
+
+              playSound();
+
+              await markRead();
+
+            }
+
+            renderMessages();
+
+          }
+
+        }
+
+        await loadConversations();
+
+        renderSidebar();
+
+      }
+    )
+    .on(
+      "postgres_changes",
+      {
+        event:"UPDATE",
+        schema:"public",
+        table:"messages"
+      },
+      payload => {
+
+        const updated =
+          payload.new;
+
+        const index =
+          messages.findIndex(
+            m =>
+              m.id === updated.id
+          );
+
+        if(index >= 0){
+
+          messages[index] =
+            updated;
+
+          renderMessages();
+
+        }
+
+      }
+    )
+    .subscribe();
+}
+
+
+/* =====================================================
+   PRESENCE
+===================================================== */
+
+function setupPresence(){
+
+  presenceChannel =
+    supabase.channel(
+      "linktribe-online",
+      {
+        config:{
+          presence:{
+            key:currentUser.id
+          }
+        }
+      }
+    );
+
+  presenceChannel
+    .on(
+      "presence",
+      {
+        event:"sync"
+      },
+      () => {
+
+        const state =
+          presenceChannel
+            .presenceState();
+
+        onlineUsers =
+          new Set(
+            Object.keys(state)
+          );
+
+        renderSidebar();
+        renderHeader();
+
+      }
+    )
+    .subscribe(
+      async status => {
+
+        if(status === "SUBSCRIBED"){
+
+          await presenceChannel.track({
+            username:
+              currentProfile.username,
+
+            online_at:
+              new Date().toISOString()
+          });
+
+        }
+
+      }
+    );
+}
+
+
+/* =====================================================
+   TYPING
+===================================================== */
+
+function setupTyping(){
+
+  if(typingChannel){
+
+    supabase.removeChannel(
+      typingChannel
+    );
+
+  }
+
+  if(!activeConversation)
+    return;
+
+  typingChannel =
+    supabase.channel(
+      "typing-" +
+      activeConversation
+    );
+
+  typingChannel
+    .on(
+      "broadcast",
+      {
+        event:"typing"
+      },
+      payload => {
+
+        if(
+          payload.payload.userId ===
+          currentUser.id
+        )
+          return;
+
+        window.partnerTyping =
+          !!payload.payload.typing;
+
+        renderHeader();
+
+        renderMessages();
+
+      }
+    )
+    .subscribe();
+}
+
+async function broadcastTyping(value){
+
+  if(!typingChannel)
+    return;
+
+  await typingChannel.send({
+    type:"broadcast",
+    event:"typing",
+    payload:{
+      userId:currentUser.id,
+      typing:value
+    }
+  });
+}
+
+function handleTyping(){
+
+  broadcastTyping(true);
+
+  clearTimeout(typingTimer);
+
+  typingTimer =
+    setTimeout(
+      stopTyping,
+      1000
+    );
+}
+
+function stopTyping(){
+
+  clearTimeout(typingTimer);
+
+  broadcastTyping(false);
+}
+
+
+/* =====================================================
+   APP RENDER
+===================================================== */
+
+function renderApp(){
+
+  applyTheme();
+
+  $("root").innerHTML = `
+
+  <main class="dashboard">
+
+    <aside
+      id="sidebar"
+      class="sidebar">
+
+      <div class="sidebar-header">
+
+        <div class="user-row">
+
+          <div class="avatar-wrap">
+
+            <img
+              class="avatar"
+              src="${avatar(currentProfile)}"
+            >
+
+            <span
+              class="status online">
+            </span>
+
+          </div>
+
+          <div class="user-info">
+
+            <strong>
+              @${escapeHTML(
+                currentProfile.username
+              )}
+            </strong>
+
+            <span>
+              ● Online
+            </span>
+
+          </div>
+
+          <button
+            class="small-btn"
+            onclick="logout()">
+
+            ↪
+
+          </button>
+
+        </div>
+
+
+        <div class="search-area">
+
+          <div class="search">
+
+            <span>⌕</span>
+
+            <input
+              id="userSearch"
+              placeholder="Find someone..."
+              autocomplete="off"
+            >
+
+          </div>
+
+          <div
+            id="searchResults"
+            class="search-results hidden">
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="section">
+        Your Tribe
+      </div>
+
+
+      <div
+        id="chatList"
+        class="chat-list">
+      </div>
+
+    </aside>
+
+
+    <section class="chat">
+
+      <header
+        id="chatHeader"
+        class="chat-header">
+      </header>
+
+
+      <div
+        id="messages"
+        class="messages">
+      </div>
+
+
+      ${
+        activeConversation
+          ? composerHTML()
+          : ""
+      }
+
+    </section>
+
+  </main>
+
+  `;
+
+  renderHeader();
+  renderSidebar();
+  renderMessages();
+
+  setupSearch();
+  setupComposer();
+  setupTyping();
+
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+function headerHTML(){
+
+  if(!activePartner){
+
+    return `
+
+      <button
+        class="mobile-menu"
+        onclick="openSidebar()">
+
+        ☰
+
+      </button>
+
+      <div
+        class="chat-person">
+
+        <strong>
+          LinkTribe
+        </strong>
+
+        <span>
+          Connect without friction.
+        </span>
+
+      </div>
+
+      <div class="chat-actions">
+
+        <button
+          onclick="toggleSound()">
+
+          ${soundEnabled ? "🔊" : "🔇"}
+
+        </button>
+
+        <button
+          onclick="toggleTheme()">
+
+          ${theme === "dark" ? "☀" : "☾"}
+
+        </button>
+
+      </div>
+
+    `;
+
+  }
+
+  const online =
+    onlineUsers.has(
+      activePartner.id
+    );
+
+  return `
+
+    <button
+      class="mobile-menu"
+      onclick="openSidebar()">
+
+      ☰
+
+    </button>
+
+    <div class="avatar-wrap">
+
+      <img
+        class="avatar"
+        src="${avatar(activePartner)}"
+      >
+
+      <span
+        class="status
+        ${online ? "online" : ""}">
+      </span>
+
+    </div>
+
+    <div class="chat-person">
+
+      <strong>
+        @${escapeHTML(
+          activePartner.username
+        )}
+      </strong>
+
+      <span
+        class="${online ? "online" : ""}">
+
+        ${
+          window.partnerTyping
+            ? "typing..."
+            : online
+              ? "Online"
+              : "Offline"
+        }
+
+      </span>
+
+    </div>
+
+    <div class="chat-actions">
+
+      <button
+        onclick="alert('Voice calling will be added in the next module.')">
+
+        ☎
+
+      </button>
+
+      <button
+        onclick="alert('Video calling will be added in the next module.')">
+
+        ▣
+
+      </button>
+
+    </div>
+
+  `;
+}
+
+function renderHeader(){
+
+  const header =
+    $("chatHeader");
+
+  if(header)
+    header.innerHTML =
+      headerHTML();
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+function renderSidebar(){
+
+  const list =
+    $("chatList");
+
+  if(!list)
+    return;
+
+  if(!conversations.length){
+
+    list.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-logo">
+          L
+        </div>
+
+        <strong>
+          Your tribe is empty
+        </strong>
+
+        <p>
+          Search for a username above
+          to start your first conversation.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+  list.innerHTML =
+    conversations
+      .map(
+        conversation => {
+
+          const partner =
+            conversation.partner;
+
+          if(!partner)
+            return "";
+
+          return `
+
+            <button
+              class="
+                chat-item
+                ${
+                  activeConversation ===
+                  conversation.id
+                    ? "active"
+                    : ""
+                }
+              "
+              onclick="openConversationById('${conversation.id}')">
+
+              <div class="avatar-wrap">
+
+                <img
+                  class="avatar"
+                  src="${avatar(partner)}"
+                >
+
+                <span
+                  class="
+                    status
+                    ${
+                      onlineUsers.has(
+                        partner.id
+                      )
+                        ? "online"
+                        : ""
+                    }
+                  ">
+                </span>
+
+              </div>
+
+              <div class="chat-info">
+
+                <strong>
+                  @${escapeHTML(
+                    partner.username
+                  )}
+                </strong>
+
+                <span>
+                  Tap to continue conversation
+                </span>
+
+              </div>
+
+            </button>
+
+          `;
+
+        }
+      )
+      .join("");
+}
+
+
+/* =====================================================
+   OPEN EXISTING CONVERSATION
+===================================================== */
+
+async function openConversationById(id){
+
+  const conversation =
+    conversations.find(
+      c => c.id === id
+    );
+
+  if(!conversation)
+    return;
+
+  await startConversation(
+    conversation.partner
+  );
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function setupSearch(){
+
+  const input =
+    $("userSearch");
+
+  if(!input)
+    return;
+
+  let timer;
+
+  input.addEventListener(
+    "input",
+    () => {
+
+      clearTimeout(timer);
+
+      timer =
+        setTimeout(
+          () =>
+            searchUsers(
+              input.value
+            ),
+          250
+        );
+
+    }
+  );
+}
+
+async function searchUsers(query){
+
+  const box =
+    $("searchResults");
+
+  if(!query.trim()){
+
+    box.classList.add(
+      "hidden"
+    );
+
+    return;
+  }
+
+  const {
+    data,
+    error
+  } =
+  await supabase
+    .from("profiles")
+    .select(
+      "id,username,avatar_url"
+    )
+    .ilike(
+      "username",
+      "%" +
+      query.trim() +
+      "%"
+    )
+    .neq(
+      "id",
+      currentUser.id
+    )
+    .limit(20);
+
+  if(error){
+
+    console.error(error);
+
+    return;
+  }
+
+  if(!data?.length){
+
+    box.innerHTML = `
+      <div
+        style="
+          padding:13px;
+          color:var(--muted);
+          font-size:10px;
+        ">
+        No users found.
+      </div>
+    `;
+
+    box.classList.remove(
+      "hidden"
+    );
+
+    return;
+  }
+
+  box.innerHTML =
+    data
+      .map(
+        p => `
+
+          <button
+            class="search-result"
+            onclick="chooseUser('${p.id}')">
+
+            <div class="avatar-wrap">
+
+              <img
+                class="avatar"
+                src="${avatar(p)}"
+              >
+
+              <span
+                class="
+                  status
+                  ${
+                    onlineUsers.has(
+                      p.id
+                    )
+                      ? "online"
+                      : ""
+                  }
+                ">
+              </span>
+
+            </div>
+
+            <div class="result-info">
+
+              <strong>
+                @${escapeHTML(
+                  p.username
+                )}
+              </strong>
+
+              <span>
+                ${
+                  onlineUsers.has(p.id)
+                    ? "Online"
+                    : "Offline"
+                }
+              </span>
+
+            </div>
+
+          </button>
+
+        `
+      )
+      .join("");
+
+  box.classList.remove(
+    "hidden"
+  );
+}
+
+async function chooseUser(id){
+
+  const {
+    data:profile,
+    error
+  } =
+  await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id",id)
+    .single();
+
+  if(error)
+    return;
+
+  $("searchResults")
+    .classList.add(
+      "hidden"
+    );
+
+  $("userSearch").value = "";
+
+  await startConversation(
+    profile
+  );
+}
+
+
+/* =====================================================
+   MESSAGES HTML
+===================================================== */
+
+function renderMessages(){
+
+  const area =
+    $("messages");
+
+  if(!area)
+    return;
+
+  const wasBottom =
+    area.scrollHeight -
+    area.scrollTop -
+    area.clientHeight <
+    150;
+
+  if(!activePartner){
+
+    area.innerHTML = `
+
+      <div class="welcome">
+
+        <div class="welcome-box">
+
+          <div class="welcome-logo">
+            L
+          </div>
+
+          <h2>
+            Welcome to LinkTribe
+          </h2>
+
+          <p>
+            Search for a username to
+            start your first conversation.
+          </p>
+
+          <button
+            class="primary"
+            style="
+              width:auto;
+              padding:0 25px;
+            "
+            onclick="openSidebar()">
+
+            Find someone
+
+          </button>
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+  let html = "";
+
+  if(!messages.length){
+
+    html += `
+
+      <div
+        style="
+          text-align:center;
+          color:var(--muted);
+          padding:35px 10px;
+          font-size:11px;
+        ">
+
+        Start your conversation with
+        <strong>
+          @${escapeHTML(
+            activePartner.username
+          )}
+        </strong>
+
+      </div>
+
+    `;
+
+  }
+
+  html +=
+    messages
+      .map(messageHTML)
+      .join("");
+
+  if(window.partnerTyping){
+
+    html += `
+
+      <div class="typing">
+
+        <i></i>
+        <i></i>
+        <i></i>
+
+      </div>
+
+    `;
+
+  }
+
+  area.innerHTML = html;
+
+  if(wasBottom)
+    scrollBottom();
+}
+
+
+/* =====================================================
+   MESSAGE HTML
+===================================================== */
+
+function messageHTML(message){
+
+  const mine =
+    message.sender_id ===
+    currentUser.id;
+
+  let content = "";
+
+  if(
+    message.message_type ===
+    "image"
+  ){
+
+    content = `
+
+      <img
+        class="message-image"
+        src="${escapeHTML(
+          message.media_url
+        )}"
+        onclick="
+          window.open(
+            '${escapeHTML(message.media_url)}',
+            '_blank'
+          )
+        "
+      >
+
+    `;
+
+  }else if(
+    message.message_type ===
+    "voice"
+  ){
+
+    const audioId =
+      "audio_" +
+      message.id;
+
+    content = `
+
+      <div
+        style="
+          display:flex;
+          align-items:center;
+          gap:9px;
+          min-width:210px;
+        ">
+
+        <button
+          onclick="playVoice('${audioId}')"
+          style="
+            width:36px;
+            height:36px;
+            border:0;
+            border-radius:50%;
+            background:rgba(255,255,255,.16);
+            color:#fff;
+          ">
+
+          ▶
+
+        </button>
+
+        <div style="flex:1">
+
+          <div class="wave">
+
+            ${Array.from(
+              {length:24},
+              (_,i) =>
+                `<i style="height:${6 + ((i*7)%18)}px"></i>`
+            ).join("")}
+
+          </div>
+
+          <div
+            style="
+              display:flex;
+              justify-content:space-between;
+              color:rgba(255,255,255,.5);
+              font-size:8px;
+            ">
+
+            <span>
+              ${message.duration || 0}s
+            </span>
+
+            <button
+              onclick="changeSpeed('${audioId}',this)"
+              style="
+                border:0;
+                background:none;
+                color:#fff;
+                font-size:9px;
+              ">
+
+              1x
+
+            </button>
+
+          </div>
+
+        </div>
+
+        <audio
+          id="${audioId}"
+          src="${escapeHTML(message.media_url)}">
+        </audio>
+
+      </div>
+
+    `;
+
+  }else{
+
+    content = `
+      <div class="text">
+        ${escapeHTML(
+          message.content
+        )}
+      </div>
+    `;
+
+  }
+
+  return `
+
+    <div
+      class="
+        message
+        ${mine ? "mine" : ""}
+      ">
+
+      <div class="bubble">
+
+        ${content}
+
+        <div class="meta">
+
+          ${time(message.created_at)}
+
+          ${
+            mine
+              ? `
+                <span
+                  class="
+                    ${message.is_read
+                      ? "read"
+                      : ""}
+                  ">
+
+                  ✓✓
+
+                </span>
+              `
+              : ""
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+}
+
+
+/* =====================================================
+   COMPOSER
+===================================================== */
+
+function composerHTML(){
+
+  return `
+
+    <footer
+      id="composer"
+      class="composer">
+
+      <input
+        id="imageInput"
+        type="file"
+        accept="image/*"
+        class="hidden"
+      >
+
+      <button
+        class="composer-btn"
+        onclick="
+          $('imageInput').click()
+        ">
+
+        ＋
+
+      </button>
+
+      <button
+        class="composer-btn"
+        onclick="addEmoji()">
+
+        ☺
+
+      </button>
+
+      <input
+        id="messageInput"
+        class="composer-input"
+        placeholder="Message..."
+        autocomplete="off"
+      >
+
+      <button
+        class="mic"
+        onclick="startRecording()">
+
+        ●
+
+      </button>
+
+      <button
+        class="send"
+        onclick="sendMessage()">
+
+        ➤
+
+      </button>
+
+    </footer>
+
+  `;
+}
+
+
+/* =====================================================
+   COMPOSER EVENTS
+===================================================== */
+
+function setupComposer(){
+
+  const input =
+    $("messageInput");
+
+  if(!input)
+    return;
+
+  input.addEventListener(
+    "keydown",
+    event => {
+
+      if(
+        event.key === "Enter" &&
+        !event.shiftKey
+      ){
+
+        event.preventDefault();
+
+        sendMessage();
+
+      }
+
+    }
+  );
+
+  input.addEventListener(
+    "input",
+    handleTyping
+  );
+
+  $("imageInput")
+    ?.addEventListener(
+      "change",
+      async event => {
+
+        const file =
+          event.target.files?.[0];
+
+        if(file)
+          await sendImage(file);
+
+        event.target.value = "";
+
+      }
+    );
+}
+
+
+/* =====================================================
+   RECORDING UI
+===================================================== */
+
+function renderRecording(){
+
+  const composer =
+    $("composer");
+
+  if(!composer)
+    return;
+
+  composer.innerHTML = `
+
+    <div class="recording">
+
+      <span
+        class="record-dot">
+      </span>
+
+      <div class="wave">
+
+        ${Array.from(
+          {length:28},
+          () => "<i></i>"
+        ).join("")}
+
+      </div>
+
+      <span
+        style="
+          color:#ff8a9b;
+          font-size:10px;
+        ">
+
+        Recording...
+
+      </span>
+
+      <button
+        class="stop"
+        onclick="stopRecording()">
+
+        ■
+
+      </button>
+
+    </div>
+
+  `;
+}
+
+
+/* =====================================================
+   VOICE PLAYER
+===================================================== */
+
+function playVoice(id){
+
+  const audio =
+    $(id);
+
+  if(!audio)
+    return;
+
+  if(audio.paused)
+    audio.play();
+  else
+    audio.pause();
+}
+
+function changeSpeed(
+  id,
+  button
+){
+
+  const audio =
+    $(id);
+
+  const speeds =
+    [1,1.5,2];
+
+  const current =
+    Number(
+      button.dataset.speed || 1
+    );
+
+  const index =
+    speeds.indexOf(current);
+
+  const next =
+    speeds[
+      (index + 1) %
+      speeds.length
+    ];
+
+  audio.playbackRate =
+    next;
+
+  button.dataset.speed =
+    next;
+
+  button.textContent =
+    next + "x";
+}
+
+
+/* =====================================================
+   EMOJI
+===================================================== */
+
+function addEmoji(){
+
+  const input =
+    $("messageInput");
+
+  if(!input)
+    return;
+
+  input.value += " 😊";
+
+  input.focus();
+}
+
+
+/* =====================================================
+   MOBILE SIDEBAR
+===================================================== */
+
+function openSidebar(){
+
+  $("sidebar")
+    ?.classList.add(
+      "open"
+    );
+}
+
+function closeSidebar(){
+
+  $("sidebar")
+    ?.classList.remove(
+      "open"
+    );
+}
+
+
+/* =====================================================
+   SOUND
+===================================================== */
+
+function toggleSound(){
+
+  soundEnabled =
+    !soundEnabled;
+
+  localStorage.setItem(
+    "linktribe_sound",
+    soundEnabled
+  );
+
+  renderHeader();
+}
+
+
+/* =====================================================
+   SCROLL
+===================================================== */
+
+function scrollBottom(){
+
+  requestAnimationFrame(
+    () => {
+
+      const area =
+        $("messages");
+
+      if(area)
+        area.scrollTop =
+          area.scrollHeight;
+
+    }
+  );
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+async function logout(){
+
+  try{
+
+    if(presenceChannel)
+      await presenceChannel.untrack();
+
+  }catch(e){}
+
+  if(presenceChannel)
+    await supabase.removeChannel(
+      presenceChannel
+    );
+
+  if(messageChannel)
+    await supabase.removeChannel(
+      messageChannel
+    );
+
+  if(typingChannel)
+    await supabase.removeChannel(
+      typingChannel
+    );
+
+  await supabase.auth.signOut();
+
+  currentUser = null;
+  currentProfile = null;
+  activeConversation = null;
+  activePartner = null;
+  conversations = [];
+  messages = [];
+
+  renderAuth();
+}
+
+
+/* =====================================================
+   NETWORK STATUS
+===================================================== */
+
+window.addEventListener(
+  "offline",
+  () => {
+
+    if(!$("connection"))
+      document.body.insertAdjacentHTML(
+        "beforeend",
+        `
+        <div
+          id="connection"
+          class="connection">
+
+          Connection lost. Reconnecting...
+
+        </div>
+        `
+      );
+
+  }
+);
+
+window.addEventListener(
+  "online",
+  () => {
+
+    $("connection")
+      ?.remove();
+
+  }
+);
+
+
+/* =====================================================
+   SESSION LISTENER
+===================================================== */
+
+supabase.auth.onAuthStateChange(
+  async (event) => {
+
+    if(event === "SIGNED_OUT"){
+
+      currentUser = null;
+      currentProfile = null;
+
+      renderAuth();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+async function initialize(){
+
+  applyTheme();
+
+  const {
+    data:{
+      session
+    }
+  } =
+  await supabase.auth.getSession();
+
+  if(!session){
+
+    renderAuth();
+
+    return;
+
+  }
+
+  try{
+
+    await loadCurrentUser();
+
+    await bootApplication();
+
+  }catch(error){
+
+    console.error(error);
+
+    await supabase.auth.signOut();
+
+    renderAuth();
+
+  }
+
+}
+
+initialize();
+
+</script>
 
 </body>
 </html>
