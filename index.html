@@ -1198,6 +1198,11 @@ footer{
     </div>
 
     <div class="game-wrap glass">
+         <!-- Background song for the game — placeholder src, swap in your file/URL -->
+<audio id="bgMusic" loop preload="none">
+  <source src="YOUR_SONG_URL_HERE.mp3" type="audio/mpeg">
+</audio>
+
       <div class="game-head">
         <div>
           <h3>Penalty shootout</h3>
@@ -1221,6 +1226,9 @@ footer{
           <span>Shot <b id="shotCount">1</b>/5</span>
           <span>Goals <b id="goalCount">0</b></span>
         </div>
+<div style="text-align:center;margin-bottom:16px;">
+  <button id="startSongBtn" class="shot-btn" style="min-width:120px;">▶ Start</button>
+</div>
 
         <div class="pitch-field" id="pitchField">
           <div class="goal" aria-hidden="true"></div>
@@ -1609,12 +1617,20 @@ setInterval(tickClock, 1000);
    SOUND (mutable, off by default)
    ============================================================ */
 const soundState = { muted: true, ctx: null };
+     const bgMusic = document.getElementById('bgMusic');
+document.getElementById('startSongBtn').addEventListener('click', () => {
+  bgMusic.muted = soundState.muted;
+  bgMusic.play().catch(() => {}); // ignore if browser blocks autoplay before interaction
+});
+
 (function soundToggle(){
   const btn = document.getElementById('muteBtn');
   const icon = document.getElementById('muteIcon');
   const mutedPath = '<path d="M11 5 6 9H3v6h3l5 4V5Z"></path><path d="m16 9 5 6M21 9l-5 6"></path>';
   const unmutedPath = '<path d="M11 5 6 9H3v6h3l5 4V5Z"></path><path d="M16 8a5 5 0 0 1 0 8"></path><path d="M19 5a9 9 0 0 1 0 14"></path>';
   btn.addEventListener('click', () => {
+       bgMusic.muted = soundState.muted;
+
     soundState.muted = !soundState.muted;
     btn.setAttribute('aria-pressed', String(!soundState.muted));
     btn.setAttribute('aria-label', soundState.muted ? 'Unmute sound' : 'Mute sound');
