@@ -652,8 +652,62 @@ header#site-nav{
   border-radius:var(--radius-lg);
   padding:32px;
   position:relative;
+  overflow:hidden;
 }
 @media (max-width:640px){.game-wrap{padding:20px;}}
+
+/* Play overlay — shown first, blurs everything behind it until pressed */
+#gameContent{
+  transition:filter 0.5s ease, opacity 0.5s ease;
+}
+#gameContent.blurred{
+  filter:blur(14px) saturate(80%);
+  opacity:0.6;
+  pointer-events:none;
+  user-select:none;
+}
+#gamePlayOverlay{
+  position:absolute;
+  inset:0;
+  z-index:50;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  background:rgba(6,9,20,0.28);
+  opacity:1;
+  visibility:visible;
+  transition:opacity 0.45s ease, visibility 0.45s ease;
+}
+#gamePlayOverlay.hidden-overlay{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+#gamePlayBtn{
+  width:76px;height:76px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(120deg,var(--blue-soft),var(--blue-strong));
+  color:#fff;
+  box-shadow:0 14px 34px -8px var(--glow);
+  transition:transform 0.2s ease;
+}
+#gamePlayBtn svg{width:30px;height:30px;margin-left:4px;}
+#gamePlayBtn:hover{transform:scale(1.06);}
+#gamePlayBtn:active{transform:scale(0.94);}
+#gamePlayOverlay .overlay-label{
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:#fff;
+}
+@media (prefers-reduced-motion: reduce){
+  #gameContent.blurred{filter:none;}
+}
+
 .game-head{
   display:flex;
   align-items:center;
@@ -1208,58 +1262,66 @@ footer{
       <audio id="bgMusic" loop preload="none">
         <source src="assets/song.mp3" type="audio/mpeg">
       </audio>
-      <div class="game-head">
-        <div>
-          <h3>Penalty shootout</h3>
-          <span class="tag">5 shots · pick your corner</span>
-        </div>
-        <button id="muteBtn" aria-label="Mute sound" aria-pressed="false">
-          <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5Z"></path><path d="M16 8a5 5 0 0 1 0 8"></path></svg>
+
+      <!-- Play overlay: shown first, blurs the game until pressed -->
+      <div id="gamePlayOverlay">
+        <button id="gamePlayBtn" aria-label="Start Kick-Off">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7-11-7Z"></path></svg>
         </button>
+        <span class="overlay-label">Press play to start</span>
       </div>
 
-      <!-- Name entry -->
-      <div id="nameEntry">
-        <label for="playerNameInput">Enter your name</label>
-        <input id="playerNameInput" type="text" maxlength="18" placeholder="Your name" autocomplete="off">
-        <button id="enterGameBtn" disabled>Enter game</button>
-      </div>
-
-      <!-- Pitch -->
-      <div id="pitch">
-        <div class="game-scoreline">
-          <span>Shot <b id="shotCount">1</b>/5</span>
-          <span>Goals <b id="goalCount">0</b></span>
-        </div>
-
-        <div style="text-align:center;margin-bottom:16px;">
-          <button id="startSongBtn" class="shot-btn" style="min-width:120px;">▶ Start</button>
-        </div>
-
-        <div class="pitch-field" id="pitchField">
-          <div class="goal" aria-hidden="true"></div>
-          <div class="keeper" id="keeper" style="left:50%;" aria-hidden="true">
-            <svg viewBox="0 0 24 40"><g><ellipse cx="12" cy="6" rx="4.2" ry="4.5"></ellipse><rect x="4" y="11" width="16" height="16" rx="4"></rect><rect x="-1" y="12" width="7" height="4" rx="2"></rect><rect x="18" y="12" width="7" height="4" rx="2"></rect><rect x="5" y="27" width="6" height="10" rx="2.5"></rect><rect x="13" y="27" width="6" height="10" rx="2.5"></rect></g></svg>
+      <div id="gameContent" class="blurred">
+        <div class="game-head">
+          <div>
+            <h3>Penalty shootout</h3>
+            <span class="tag">5 shots · pick your corner</span>
           </div>
-          <div class="ball" id="ball"></div>
-          <div class="result-flash" id="resultFlash"></div>
-          <button class="zone-btn" data-zone="left" aria-label="Aim left"></button>
-          <button class="zone-btn" data-zone="center" aria-label="Aim center"></button>
-          <button class="zone-btn" data-zone="right" aria-label="Aim right"></button>
+          <button id="muteBtn" aria-label="Mute sound" aria-pressed="false">
+            <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5Z"></path><path d="M16 8a5 5 0 0 1 0 8"></path></svg>
+          </button>
         </div>
 
-        <div class="game-controls" role="group" aria-label="Shot direction">
-          <button class="shot-btn" data-zone="left">◀ Left</button>
-          <button class="shot-btn" data-zone="center">● Center</button>
-          <button class="shot-btn" data-zone="right">Right ▶</button>
+        <!-- Name entry -->
+        <div id="nameEntry">
+          <label for="playerNameInput">Enter your name</label>
+          <input id="playerNameInput" type="text" maxlength="18" placeholder="Your name" autocomplete="off">
+          <button id="enterGameBtn" disabled>Enter game</button>
         </div>
 
-        <div id="roundResult" hidden>
-          <h4 id="roundResultTitle">Round over</h4>
-          <p id="roundResultSub">You scored 0 out of 5.</p>
-          <button id="playAgainBtn">Play again</button>
+        <!-- Pitch -->
+        <div id="pitch">
+          <div class="game-scoreline">
+            <span>Shot <b id="shotCount">1</b>/5</span>
+            <span>Goals <b id="goalCount">0</b></span>
+          </div>
+
+          <div class="pitch-field" id="pitchField">
+            <div class="goal" aria-hidden="true"></div>
+            <div class="keeper" id="keeper" style="left:50%;" aria-hidden="true">
+              <svg viewBox="0 0 24 40"><g><ellipse cx="12" cy="6" rx="4.2" ry="4.5"></ellipse><rect x="4" y="11" width="16" height="16" rx="4"></rect><rect x="-1" y="12" width="7" height="4" rx="2"></rect><rect x="18" y="12" width="7" height="4" rx="2"></rect><rect x="5" y="27" width="6" height="10" rx="2.5"></rect><rect x="13" y="27" width="6" height="10" rx="2.5"></rect></g></svg>
+            </div>
+            <div class="ball" id="ball"></div>
+            <div class="result-flash" id="resultFlash"></div>
+            <button class="zone-btn" data-zone="left" aria-label="Aim left"></button>
+            <button class="zone-btn" data-zone="center" aria-label="Aim center"></button>
+            <button class="zone-btn" data-zone="right" aria-label="Aim right"></button>
+          </div>
+
+          <div class="game-controls" role="group" aria-label="Shot direction">
+            <button class="shot-btn" data-zone="left">◀ Left</button>
+            <button class="shot-btn" data-zone="center">● Center</button>
+            <button class="shot-btn" data-zone="right">Right ▶</button>
+          </div>
+
+          <div id="roundResult" hidden>
+            <h4 id="roundResultTitle">Round over</h4>
+            <p id="roundResultSub">You scored 0 out of 5.</p>
+            <button id="playAgainBtn">Play again</button>
+          </div>
         </div>
       </div>
+      <!-- /#gameContent -->
 
       <!-- Leaderboard -->
       <div class="leaderboard glass">
@@ -1624,10 +1686,20 @@ setInterval(tickClock, 1000);
    ============================================================ */
 const soundState = { muted: true, ctx: null };
 const bgMusic = document.getElementById('bgMusic');
-document.getElementById('startSongBtn').addEventListener('click', () => {
-  bgMusic.muted = soundState.muted;
-  bgMusic.play().catch(() => {}); // ignore if browser blocks autoplay before interaction
-});
+
+/* Play overlay — reveals the blurred game, does NOT start the song yet.
+   The song itself starts when the player submits their name below. */
+(function gamePlayOverlay(){
+  const overlay = document.getElementById('gamePlayOverlay');
+  const playBtn = document.getElementById('gamePlayBtn');
+  const content = document.getElementById('gameContent');
+  playBtn.addEventListener('click', () => {
+    overlay.classList.add('hidden-overlay');
+    content.classList.remove('blurred');
+    document.getElementById('playerNameInput').focus();
+  });
+})();
+
 (function soundToggle(){
   const btn = document.getElementById('muteBtn');
   const icon = document.getElementById('muteIcon');
@@ -1707,6 +1779,11 @@ function playTone(freq, duration){
     nameEntry.style.display = 'none';
     pitch.classList.add('active');
     resetRound();
+
+    // Start the song now that the player has confirmed their name
+    bgMusic.muted = soundState.muted;
+    bgMusic.currentTime = 0;
+    bgMusic.play().catch(() => {}); // ignored if browser blocks playback
   });
 
   function resetRound(){
