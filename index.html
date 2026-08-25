@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uhhh... Searching?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFF8ED;
+    --ink:#242021;
+    --yolk:#FFD23F;
+    --tomato:#FF6B5E;
+    --teal:#3FBFA6;
+    --lilac:#B79CED;
+    --line:#242021;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(255,210,63,0.35), transparent 40%),
+      radial-gradient(circle at 88% 82%, rgba(183,156,237,0.35), transparent 45%),
+      var(--paper);
+    font-family:'Space Mono', monospace;
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+
+  .stage{
+    width:100%;
+    max-width:640px;
+  }
+
+  .mascot{
+    text-align:center;
+    font-size:64px;
+    line-height:1;
+    margin-bottom:6px;
+    animation:wobble 2.4s ease-in-out infinite;
+    transform-origin:50% 80%;
+  }
+
+  @keyframes wobble{
+    0%,100%{transform:rotate(-4deg);}
+    50%{transform:rotate(4deg);}
+  }
+
+  h1{
+    font-family:'Baloo 2', cursive;
+    font-weight:800;
+    text-align:center;
+    font-size:clamp(28px,6vw,44px);
+    margin:0 0 4px;
+    letter-spacing:0.5px;
+  }
+
+  .sub{
+    text-align:center;
+    font-size:14px;
+    opacity:0.75;
+    margin:0 0 28px;
+    min-height:20px;
+  }
+
+  .search-wrap{
+    display:flex;
+    gap:10px;
+    background:#fff;
+    border:3px solid var(--line);
+    border-radius:16px;
+    padding:10px;
+    box-shadow:6px 6px 0 var(--ink);
+  }
+
+  .search-wrap input{
+    flex:1;
+    border:none;
+    outline:none;
+    font-family:'Space Mono', monospace;
+    font-size:16px;
+    padding:10px 12px;
+    background:transparent;
+    color:var(--ink);
+  }
+
+  .search-wrap input::placeholder{
+    color:#9a9a9a;
+  }
+
+  .search-wrap button{
+    border:3px solid var(--ink);
+    background:var(--yolk);
+    font-family:'Baloo 2', cursive;
+    font-weight:700;
+    font-size:15px;
+    padding:0 18px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:transform 0.12s ease;
+  }
+
+  .search-wrap button:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:3px 3px 0 var(--ink);
+  }
+
+  .search-wrap button:active{
+    transform:translate(1px,1px);
+    box-shadow:none;
+  }
+
+  .dots{
+    text-align:center;
+    margin:18px 0 24px;
+    font-size:13px;
+    letter-spacing:1px;
+    opacity:0.8;
+  }
+
+  .dots span{
+    display:inline-block;
+    animation:bounce 1.2s infinite ease-in-out;
+  }
+  .dots span:nth-child(2){animation-delay:0.15s;}
+  .dots span:nth-child(3){animation-delay:0.3s;}
+
+  @keyframes bounce{
+    0%,80%,100%{transform:translateY(0); opacity:0.4;}
+    40%{transform:translateY(-6px); opacity:1;}
+  }
+
+  .console{
+    background:var(--ink);
+    color:#c7ffed;
+    border-radius:14px;
+    border:3px solid var(--ink);
+    padding:16px 18px;
+    font-size:12.5px;
+    line-height:1.9;
+    height:190px;
+    overflow:hidden;
+    position:relative;
+    box-shadow:6px 6px 0 rgba(0,0,0,0.15);
+  }
+
+  .console::before{
+    content:"background-tasks.log";
+    position:absolute;
+    top:-1px;
+    left:0;
+    right:0;
+    background:#3a3436;
+    color:#ffd23f;
+    font-family:'Baloo 2', cursive;
+    font-size:11px;
+    padding:5px 14px;
+    letter-spacing:0.5px;
+  }
+
+  .console-body{
+    margin-top:26px;
+  }
+
+  .console-line{
+    white-space:nowrap;
+    opacity:0;
+    animation:fadein 0.4s forwards;
+  }
+
+  @keyframes fadein{
+    to{opacity:1;}
+  }
+
+  .console-line .tag{
+    color:#ff9f7d;
+  }
+
+  footer{
+    text-align:center;
+    font-size:11px;
+    opacity:0.5;
+    margin-top:18px;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="mascot" id="mascot">🤔</div>
+  <h1>uhh... give me a sec</h1>
+  <p class="sub" id="subline">reticulating splines and other things that aren't real</p>
+
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="type something, I'll pretend to look for it...">
+    <button id="searchBtn">search??</button>
+  </div>
+
+  <div class="dots">
+    thinking <span>.</span><span>.</span><span>.</span> probably
+  </div>
+
+  <div class="console">
+    <div class="console-body" id="consoleBody"></div>
+  </div>
+
+  <footer>nothing above this line is a real system. please don't call IT.</footer>
+</div>
+
+<script>
+  const subs = [
+    "reticulating splines and other things that aren't real",
+    "still faster than my uncle finding his glasses",
+    "definitely not just staring blankly into the void",
+    "consulting the ancient scrolls (a sticky note)",
+    "buffering... buffering... is this thing on",
+    "asking the intern, the intern is a raccoon"
+  ];
+
+  const mascots = ["🤔","🫠","🙃","🤷","😵‍💫","🧐"];
+
+  const logLines = [
+    ['[BOOT]', 'waking up the hamster wheel'],
+    ['[WARN]', 'hamster requested a coffee break'],
+    ['[TASK]', 'checking under the couch cushions for your query'],
+    ['[NET]', 'pinging a magic 8-ball... response: "ask again later"'],
+    ['[CACHE]', 'found 3 old socks, 0 useful results'],
+    ['[AI]', 'consulting a very confident goldfish'],
+    ['[DB]', 'searching the fridge instead of the database'],
+    ['[SYS]', 'rebooting the rebooter that reboots the reboot'],
+    ['[FIX]', 'turning it off and on again, for emotional support'],
+    ['[LOL]', 'accidentally opened yesterday\'s search by mistake'],
+    ['[OK]', 'pretending that counts as progress'],
+    ['[MEM]', 'allocating 400mb of vibes'],
+    ['[CPU]', 'spinning up the flat tire of a server'],
+    ['[SEARCH]', 'still not found, but the vibes are immaculate'],
+    ['[TASK]', 'asking a pigeon to deliver the results'],
+    ['[WARN]', 'raccoon intern has left the building']
+  ];
+
+  const subline = document.getElementById('subline');
+  const mascot = document.getElementById('mascot');
+  const consoleBody = document.getElementById('consoleBody');
+  const searchBtn = document.getElementById('searchBtn');
+  const searchInput = document.getElementById('searchInput');
+
+  function randomFrom(arr){
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function rotateHeader(){
+    subline.style.opacity = 0;
+    mascot.style.opacity = 0;
+    setTimeout(() => {
+      subline.textContent = randomFrom(subs);
+      mascot.textContent = randomFrom(mascots);
+      subline.style.transition = 'opacity 0.3s ease';
+      mascot.style.transition = 'opacity 0.3s ease';
+      subline.style.opacity = 1;
+      mascot.style.opacity = 1;
+    }, 250);
+  }
+
+  const maxLines = 7;
+  const activeLines = [];
+
+  function pushLogLine(){
+    const [tag, msg] = randomFrom(logLines);
+    const line = document.createElement('div');
+    line.className = 'console-line';
+    line.innerHTML = '<span class="tag">' + tag + '</span> ' + msg;
+    consoleBody.appendChild(line);
+    activeLines.push(line);
+
+    if (activeLines.length > maxLines) {
+      const old = activeLines.shift();
+      old.remove();
+    }
+  }
+
+  for (let i = 0; i < 5; i++) pushLogLine();
+
+  setInterval(pushLogLine, 1400);
+  setInterval(rotateHeader, 3200);
+
+  searchBtn.addEventListener('click', () => {
+    const original = searchBtn.textContent;
+    searchBtn.textContent = 'nope';
+    pushLogLine();
+    mascot.textContent = '😵‍💫';
+    setTimeout(() => {
+      searchBtn.textContent = 'still nothing';
+    }, 700);
+    setTimeout(() => {
+      searchBtn.textContent = original;
+    }, 1800);
+  });
+
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') searchBtn.click();
+  });
+</script>
+
+</body>
+</html>
